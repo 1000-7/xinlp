@@ -443,11 +443,42 @@ public class DoubleArrayTrie<V> implements Serializable {
 
     public V getFunction(char[] o) {
         //多次一举，先这样吧
-        int index = exactMatchSearch(Arrays.toString(o), 0, o.length, 0);
+        int index = exactMatchSearch(o, 0, o.length, 0);
         if (index >= 0) {
             return getValueAt(index);
         }
         return null;
+    }
+
+    /**
+     * 精确查询
+     *
+     * @param keyChars 键的char数组
+     * @param pos      char数组的起始位置
+     * @param len      键的长度
+     * @param nodePos  开始查找的位置（本参数允许从非根节点查询）
+     * @return 查到的节点代表的value ID，负数表示不存在
+     */
+    public int exactMatchSearch(char[] keyChars, int pos, int len, int nodePos) {
+        int result = -1;
+
+        int b = base[nodePos];
+        int p;
+
+        for (int i = pos; i < len; i++) {
+            p = b + (int) (keyChars[i]) + 1;
+            if (b == check[p])
+                b = base[p];
+            else
+                return result;
+        }
+
+        p = b;
+        int n = base[p];
+        if (b == check[p] && n < 0) {
+            result = -n - 1;
+        }
+        return result;
     }
 
     public V getValueAt(int index) {
