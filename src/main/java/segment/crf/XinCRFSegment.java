@@ -37,6 +37,7 @@ public class XinCRFSegment {
         id2tag = xinCRFModel.getId2tag();
         tag2id = xinCRFModel.getTag2id();
         assert xinCRFModel != null;
+//        XinCRFConfig.print(matrix);
     }
 
     public void viterbi(String sentence) {
@@ -60,6 +61,8 @@ public class XinCRFSegment {
                 emissionProbability[t][i] = computeScore(scoreList, i);
             }
         }
+
+//        XinCRFConfig.print(emissionProbability);
         if (observationNum == 1) {
             double maxScore = -1e10;
             int bestTag = 0;
@@ -92,15 +95,21 @@ public class XinCRFSegment {
             }
         }
 
+
+//        XinCRFConfig.print(path);
+//        XinCRFConfig.print(deltas);
+
+
         if (deltas[observationNum - 1][1] > deltas[observationNum - 1][3]) {
-            table.setLast(observationNum - 1, id2tag[1]);
+            table.v[observationNum-1][1]=id2tag[1];
         } else {
-            table.setLast(observationNum - 1, id2tag[3]);
+            table.v[observationNum-1][1]=id2tag[3];
         }
 
         //找最优路径，注意最后一个字不是所有状态的最大值，而是E(1)和S(3)的最大值
         for (int i = observationNum - 2; i >= 0; i--) {
-            table.setLast(i, id2tag[path[i + 1][tag2id.get(table.get(i + 1, 1))]]);
+            table.v[i][1]=id2tag[path[i+1][tag2id.get(table.v[i+1][1])]];
+//            table.setLast(i, id2tag[path[i + 1][tag2id.get(table.get(i + 1, 1))]]);
         }
         System.out.println(table);
     }
@@ -154,8 +163,11 @@ public class XinCRFSegment {
     public static void main(String[] args) {
         XinCRFSegment xinCRFSegment = new XinCRFSegment();
         xinCRFSegment.viterbi("今天天气很好");
+        xinCRFSegment.viterbi("你好");
         xinCRFSegment.viterbi("商品和服务");
         xinCRFSegment.viterbi("武汉大学非常美");
         xinCRFSegment.viterbi("我是中国人");
+        xinCRFSegment.viterbi("迈向充满希望的新司机");
+        xinCRFSegment.viterbi("香港特别行政区");
     }
 }
