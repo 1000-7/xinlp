@@ -104,7 +104,7 @@ public class EmHmm {
             reCalKsi(sequence, alpha, beta, ksi);
             reCalLambda(sequence, gamma, ksi);
             double error = difference(transferProbability, oldTransferProbability);
-            if (difference(transferProbability, oldTransferProbability) < precision) {
+            if (error < precision) {
                 break;
             }
             iter++;
@@ -129,7 +129,6 @@ public class EmHmm {
                 if (minus > res) {
                     res = minus;
                 }
-                System.err.println(res);
             }
         }
         return res;
@@ -447,7 +446,8 @@ public class EmHmm {
         int d = 0;
         FileWriter fw = new FileWriter("viterbiHmm.txt", true);
         for (String s : Objects.requireNonNull(fileLines)) {
-            hmm.train(hmm.sentence2int(s),3);
+
+            hmm.train(hmm.sentence2int(s),50);
             d++;
             if (d % 1000 == 0) {
                 fw.write(d + "\t" + hmm.viterbi("今天的天气很好，出来散心挺不错，武汉大学特别好，提高人民的生活水平") + "\n");
