@@ -40,7 +40,7 @@ public class BaumWelchHmm {
      **/
     protected double[][] emissionProbability;
     /**
-     * 定义无穷大
+     * 定义无穷小
      **/
     public static final double INFINITY = Double.MIN_VALUE;
     /**
@@ -382,8 +382,6 @@ public class BaumWelchHmm {
         }
         log.info(String.valueOf(sb));
     }
-
-
 
 
     public void methodTest(BaumWelchHmm bwh) {

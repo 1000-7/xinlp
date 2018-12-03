@@ -146,8 +146,6 @@ public class ViterbiHmm {
                 deltas[t][i] += emissionProbability[i][observeSequence[t]];
             }
         }
-        XinCRFConfig.print(deltas);
-        XinCRFConfig.print(path);
 
         //找最优路径，注意最后一个字不是所有状态的最大值，而是E(1)和S(3)的最大值
         Integer[] mostLikelyStateSequence = new Integer[observationNum];

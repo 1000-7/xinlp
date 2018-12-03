@@ -446,7 +446,7 @@ public class EmHmm {
         int d = 0;
         FileWriter fw = new FileWriter("viterbiHmm.txt", true);
         for (String s : Objects.requireNonNull(fileLines)) {
-
+            log.info("正在训练第"+d+"行...");
             hmm.train(hmm.sentence2int(s),50);
             d++;
             if (d % 1000 == 0) {
