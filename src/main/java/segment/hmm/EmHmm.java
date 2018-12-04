@@ -446,10 +446,11 @@ public class EmHmm {
         int d = 0;
         FileWriter fw = new FileWriter("viterbiHmm.txt", true);
         for (String s : Objects.requireNonNull(fileLines)) {
-            log.info("正在训练第"+d+"行...");
-            hmm.train(hmm.sentence2int(s),50);
+            log.info("正在训练第" + d + "行...");
+            String[] paras = s.replaceAll("[“”]", "").split("[,.?;。，!:：！？（）]");
+            hmm.train(hmm.sentence2int(s), 50);
             d++;
-            if (d % 1000 == 0) {
+            if (d % 100 == 0) {
                 fw.write(d + "\t" + hmm.viterbi("今天的天气很好，出来散心挺不错，武汉大学特别好，提高人民的生活水平") + "\n");
             }
         }
