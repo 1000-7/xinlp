@@ -97,6 +97,8 @@ public class EmHmm {
         }
         double[][][] ksi = new double[sequenceLen - 1][stateNum][stateNum];
         int iter = 0;
+        double lastError = 0;
+
         while (iter < maxIter) {
             log.info("iter" + iter + "...");
             double[][] oldTransferProbability = backupA();
@@ -107,9 +109,10 @@ public class EmHmm {
             reCalKsi(sequence, alpha, beta, ksi);
             reCalLambda(sequence, gamma, ksi);
             double error = difference(transferProbability, oldTransferProbability);
-            if (error < precision) {
+            if (error < precision || FastMath.abs(error - lastError) < precision) {
                 break;
             }
+            lastError = error;
             iter++;
         }
     }
@@ -448,18 +451,20 @@ public class EmHmm {
         hmm.randomInit(100);
         int d = 0;
         FileWriter fw = new FileWriter("viterbiHmm.txt", true);
+        StringBuilder sb = new StringBuilder();
         for (String s : Objects.requireNonNull(fileLines)) {
             log.info("正在训练第" + d + "行...");
-            String[] paras = s.replaceAll("[“”]", "").split("[,.?;。，!:：！？（）]");
-            for (String para : paras) {
-                d++;
-                int len = para.toCharArray().length > 50 ? 50 : para.toCharArray().length;
-                hmm.train(hmm.sentence2int(s), len);
-                if (d % 100 == 0) {
-                    fw.write(d + "\t" + hmm.viterbi("今天的天气很好，出来散心挺不错，武汉大学特别好，提高人民的生活水平") + "\n");
-                }
+            sb.append(s);
+            d++;
+
+            if (d % 100 == 0) {
+                hmm.train(hmm.sentence2int(sb.toString()), 100);
+                fw.write(d + "\t" + hmm.viterbi("今天的天气很好，出来散心挺不错，武汉大学特别好，提高人民的生活水平") + "\n");
+                fw.flush();
             }
+
         }
+        fw.close();
         hmm.viterbi("今天的天气很好，出来散心挺不错，武汉大学特别好，提高人民的生活水平");
     }
 }
