@@ -448,10 +448,13 @@ public class EmHmm {
         for (String s : Objects.requireNonNull(fileLines)) {
             log.info("正在训练第" + d + "行...");
             String[] paras = s.replaceAll("[“”]", "").split("[,.?;。，!:：！？（）]");
-            hmm.train(hmm.sentence2int(s), 50);
-            d++;
-            if (d % 100 == 0) {
-                fw.write(d + "\t" + hmm.viterbi("今天的天气很好，出来散心挺不错，武汉大学特别好，提高人民的生活水平") + "\n");
+            for (String para : paras) {
+                d++;
+                int len = para.toCharArray().length > 50 ? 50 : para.toCharArray().length;
+                hmm.train(hmm.sentence2int(s), len);
+                if (d % 100 == 0) {
+                    fw.write(d + "\t" + hmm.viterbi("今天的天气很好，出来散心挺不错，武汉大学特别好，提高人民的生活水平") + "\n");
+                }
             }
         }
         hmm.viterbi("今天的天气很好，出来散心挺不错，武汉大学特别好，提高人民的生活水平");
