@@ -114,6 +114,7 @@ public class EmHmm {
             }
             lastError = error;
             iter++;
+            log.info(viterbi("今天的天气很好，出来散心挺不错，武汉大学特别好，提高人民的生活水平"));
         }
     }
 
@@ -454,7 +455,7 @@ public class EmHmm {
         StringBuilder sb = new StringBuilder();
         for (String s : Objects.requireNonNull(fileLines)) {
             log.info("正在训练第" + d + "行...");
-            sb.append(s);
+            sb.append(s.replaceAll(" ", ""));
             d++;
 
             if (d % 100 == 0) {
