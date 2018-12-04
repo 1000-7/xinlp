@@ -92,6 +92,9 @@ public class EmHmm {
         double[][] alpha = new double[sequence.length][stateNum];
         double[][] beta = new double[sequence.length][stateNum];
         double[][] gamma = new double[sequence.length][stateNum];
+        if (sequenceLen <= 1) {
+            return;
+        }
         double[][][] ksi = new double[sequenceLen - 1][stateNum][stateNum];
         int iter = 0;
         while (iter < maxIter) {
