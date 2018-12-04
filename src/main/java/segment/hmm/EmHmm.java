@@ -14,7 +14,6 @@ import org.apache.commons.math3.random.RandomGenerator;
 import org.apache.commons.math3.util.FastMath;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
@@ -51,10 +50,6 @@ public class EmHmm {
      **/
     protected double[][] emissionProbability;
     /**
-     * 定义无穷小
-     **/
-    public static final double INFINITY = Double.MIN_VALUE;
-    /**
      * 状态值集合的大小 N
      **/
     protected int stateNum = 4;
@@ -85,7 +80,8 @@ public class EmHmm {
     public void train(int[] sequence, int maxIter, double precision) {
         this.sequence = sequence;
         this.sequenceLen = sequence.length;
-        fpbp(sequence, maxIter, precision);
+        this.precision = precision;
+        fpbp(sequence, maxIter, this.precision);
     }
 
     private void fpbp(int[] sequence, int maxIter, double precision) {
@@ -110,11 +106,12 @@ public class EmHmm {
             reCalLambda(sequence, gamma, ksi);
             double error = difference(transferProbability, oldTransferProbability);
             if (error < precision || FastMath.abs(error - lastError) < precision) {
+                log.info(viterbi("过去的一年,争取对人类作出新的更大的贡献"));
                 break;
             }
             lastError = error;
             iter++;
-            log.info(viterbi("今天的天气很好，出来散心挺不错，武汉大学特别好，提高人民的生活水平"));
+
         }
     }
 
@@ -155,23 +152,30 @@ public class EmHmm {
 
     private void updateB(int[] sequence, double[][] gamma) {
         log.info("更新观测概率B...");
+        double[] gammaSum = new double[stateNum];
+        double[] gamamT = new double[sequenceLen];
+        for (int i = 0; i < stateNum; i++) {
+            for (int t = 0; t < sequenceLen; t++) {
+                gamamT[t] = gamma[t][i];
+            }
+            gammaSum[i] = sumLog(gamamT);
+        }
+
         ArrayList<Double> emission = new ArrayList<>();
         for (int j = 0; j < stateNum; j++) {
-            double[] gammaJ = new double[sequenceLen];
-            for (int t = 0; t < sequenceLen; t++) {
-                gammaJ[t] = gamma[t][j];
-            }
             for (int k = 0; k < observationNum; k++) {
+                emission.clear();
                 for (int t = 0; t < sequenceLen; t++) {
                     if (sequence[t] == k) {
                         emission.add(gamma[t][j]);
                     }
                 }
-                double[] emissionArray = new double[emission.size()];
-                for (int i = 0; i < emission.size(); i++) {
-                    emissionArray[i] = emission.get(i);
+                if (emission.size() == 0) {
+                    emissionProbability[j][k] = MIN;
+                    continue;
                 }
-                emissionProbability[j][k] = sumLog(emissionArray) - sumLog(gammaJ);
+                Double[] emissionArray = emission.toArray(new Double[]{});
+                emissionProbability[j][k] = sumLog(emissionArray) - gammaSum[j];
             }
         }
     }
@@ -193,6 +197,22 @@ public class EmHmm {
         }
     }
 
+    public void correctPi() {
+        pi[1] = MIN;
+        pi[2] = MIN;
+    }
+
+    public void correctA() {
+        transferProbability[0][0] = MIN;
+        transferProbability[0][3] = MIN;
+        transferProbability[1][1] = MIN;
+        transferProbability[1][2] = MIN;
+        transferProbability[2][0] = MIN;
+        transferProbability[2][3] = MIN;
+        transferProbability[3][1] = MIN;
+        transferProbability[3][2] = MIN;
+    }
+
     private void reCalKsi(int[] sequence, double[][] alpha, double[][] beta, double[][][] ksi) {
         log.info("计算ksi...");
         for (int t = 0; t < sequenceLen - 1; t++) {
@@ -206,7 +226,7 @@ public class EmHmm {
             double logSum = sumLog(sum);
             for (int i = 0; i < stateNum; i++) {
                 for (int j = 0; j < stateNum; j++) {
-                    ksi[t][i][j] /= logSum;
+                    ksi[t][i][j] -= logSum;
                 }
             }
         }
@@ -269,9 +289,7 @@ public class EmHmm {
 
     private void randomInitPi() {
         log.info("正在初始化参数Pi");
-        pi = generate();
-        pi[1] = MIN;
-        pi[2] = MIN;
+        pi = new double[]{-0.26268660809250016, MIN, MIN, -1.4652633398537678};
     }
 
     //效果太差，转移矩阵就不随机了
@@ -357,6 +375,18 @@ public class EmHmm {
         System.out.println();
     }
 
+    private double sumLog(Double[] logArr) {
+        if (logArr.length == 0) {
+            return MIN;
+        }
+        double max = max(logArr);
+        double result = 0;
+        for (int i = 0; i < logArr.length; i++) {
+            result += Math.exp(logArr[i] - max);
+        }
+        return max + Math.log(result);
+    }
+
     private double sumLog(double[] logArr) {
         if (logArr.length == 0) {
             return MIN;
@@ -367,6 +397,14 @@ public class EmHmm {
             result += Math.exp(logArr[i] - max);
         }
         return max + Math.log(result);
+    }
+
+    private static double max(Double[] arr) {
+        double max = arr[0];
+        for (int i = 1; i < arr.length; i++) {
+            max = arr[i] > max ? arr[i] : max;
+        }
+        return max;
     }
 
     private static double max(double[] arr) {
@@ -382,11 +420,12 @@ public class EmHmm {
         Integer[][] path = new Integer[observationNum][stateNum];
         Double[][] deltas = new Double[observationNum][stateNum];
 
+        correctPi();
         for (int i = 0; i < stateNum; i++) {
             deltas[0][i] = pi[i] + emissionProbability[i][observeSequence[0]];
             path[0][i] = i;
         }
-
+        correctA();
         for (int t = 1; t < observationNum; t++) {
             for (int i = 0; i < stateNum; i++) {
                 deltas[t][i] = deltas[t - 1][0] + transferProbability[0][i];
@@ -426,7 +465,7 @@ public class EmHmm {
         char[] chars = s.toCharArray();
         int[] integers = new int[chars.length];
         for (int i = 0; i < integers.length; i++) {
-            integers[i] = wordId.getOrDefault(String.valueOf(chars[i]), 10001);
+            integers[i] = wordId.getOrDefault(String.valueOf(chars[i]), 1);
         }
         return integers;
     }
@@ -444,28 +483,17 @@ public class EmHmm {
     public static void main(String[] args) throws IOException {
         List<String> fileLines = null;
         try {
-            fileLines = FileUtils.readLines(new File(System.getProperty("user.dir") + "/src/main/resources/pku_test.utf8"), "UTF-8");
+            fileLines = FileUtils.readLines(new File(System.getProperty("user.dir") + "/src/main/resources/pku_training.splitBy2space.utf8"), "UTF-8");
         } catch (IOException e) {
             e.printStackTrace();
         }
         EmHmm hmm = new EmHmm();
-        hmm.randomInit(100);
-        int d = 0;
-        FileWriter fw = new FileWriter("viterbiHmm.txt", true);
+        hmm.randomInit(1);
         StringBuilder sb = new StringBuilder();
         for (String s : Objects.requireNonNull(fileLines)) {
-            log.info("正在训练第" + d + "行...");
             sb.append(s.replaceAll(" ", ""));
-            d++;
-
-            if (d % 100 == 0) {
-                hmm.train(hmm.sentence2int(sb.toString()), 100);
-                fw.write(d + "\t" + hmm.viterbi("今天的天气很好，出来散心挺不错，武汉大学特别好，提高人民的生活水平") + "\n");
-                fw.flush();
-            }
-
         }
-        fw.close();
-        hmm.viterbi("今天的天气很好，出来散心挺不错，武汉大学特别好，提高人民的生活水平");
+        log.info("训练数据添加完毕");
+        hmm.train(hmm.sentence2int(sb.toString()), 10);
     }
 }
