@@ -2,6 +2,8 @@ import argparse
 import logging
 import os
 
+import config
+
 
 def get_logger(filename):
     logger = logging.getLogger('logger')
@@ -39,13 +41,13 @@ def conlleval(label_predict, label_path, metric_path):
     :param metric_path:
     :return:
     """
-    eval_perl = "/home/wangxin/IdeaProjects/xinlp/conlleval_rev.pl"
+    eval_perl = config.eval_perl
     with open(label_path, "w") as fw:
         line = []
         for sent_result in label_predict:
             for char, tag, tag_ in sent_result:
-                tag = '0' if tag == 'O' else tag
-                #char = char.encode("utf-8")
+                # tag = '0' if tag == 'O' else tag
+                # char = char.encode("utf-8")
                 line.append("{} {} {}\n".format(char, tag, tag_))
             line.append("\n")
         fw.writelines(line)

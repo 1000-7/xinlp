@@ -201,20 +201,15 @@ class BiLSTM_CRF:
 
     def evaluate(self, label_list_dev, test, epoch=None):
         self.logger.info('===========正在进行评价===========')
-        label2tag = {}
-        for tag, label in self.tag2label.items():
-            label2tag[label] = tag
-
         model_predict = []
         for label_, (sent, tag) in zip(label_list_dev, test):
-            tag_ = [label2tag[label__] for label__ in label_]
             sent_res = []
             if len(label_) != len(sent):
                 print(sent)
                 print(len(label_))
                 print(tag)
             for i in range(len(sent)):
-                sent_res.append([sent[i], tag[i], tag_[i]])
+                sent_res.append([sent[i], tag[i], label_[i]])
             model_predict.append(sent_res)
         epoch_num = str(epoch + 1) if epoch != None else 'test'
         label_path = os.path.join(self.result_path, 'label_' + epoch_num)
