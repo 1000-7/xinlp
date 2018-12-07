@@ -41,7 +41,7 @@ class BiLSTM_CRF:
     def add_placeholders(self):
         self.word_ids = tf.placeholder(tf.int32, shape=[None, self.max_len], name="word_ids")
         self.labels = tf.placeholder(tf.int32, shape=[None, self.max_len], name="labels")
-        self.sequence_lengths = tf.placeholder(tf.int32, shape=[self.max_len], name="sequence_lengths")
+        self.sequence_lengths = tf.placeholder(tf.int32, shape=[self.batch_size], name="sequence_lengths")
 
         self.dropout_pl = tf.placeholder(dtype=tf.float32, shape=[], name="dropout")
         self.lr_pl = tf.placeholder(dtype=tf.float32, shape=[], name="lr")
