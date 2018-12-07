@@ -165,7 +165,7 @@ class BiLSTM_CRF:
                     '{} epoch {}, step {}, loss: {:.4}, global_step: {}'.format(start_time, epoch + 1, step + 1,
                                                                                 loss_train, step_num))
             self.file_writer.add_summary(summary, step_num)
-            if step + 1 == num_batches:
+            if epoch % 5 == 0:
                 saver.save(sess, self.model_path, global_step=step_num)
         self.logger.info('===========validation / test===========')
         label_list_dev, seq_len_list_dev = self.dev_one_epoch(sess, test)
@@ -200,11 +200,15 @@ class BiLSTM_CRF:
             return label_list, seq_len_list
 
     def evaluate(self, label_list_dev, test):
+        self.logger.info('===========正在进行评价===========')
         label2tag = {}
         for tag, label in self.tag2label.items():
             label2tag[label] = tag
         model_predict = []
+        d = 0
         for label_, (sent, tag) in zip(label_list_dev, test):
+            print(d)
+            d += 1
             tag_ = [label2tag[label__] for label__ in label_]
             sent_res = []
             if len(label_) != len(sent):
@@ -214,5 +218,5 @@ class BiLSTM_CRF:
             for i in range(len(sent)):
                 sent_res.append([sent[i], tag[i], tag_[i]])
             model_predict.append(sent_res)
-            print(model_predict)
+        print(model_predict)
         return model_predict
