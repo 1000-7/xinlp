@@ -26,9 +26,9 @@ import java.util.*;
  */
 @Slf4j
 public class EmHmm {
-    protected static final double MIN = -3.14e+100;
+    protected static final double MIN = -10000000;
 
-    private double precision = 1e-7;
+    private double precision = 1e-11;
     /**
      * 序列长度，T
      */
@@ -104,6 +104,7 @@ public class EmHmm {
             reCalGamma(alpha, beta, gamma);
             reCalKsi(sequence, alpha, beta, ksi);
             reCalLambda(sequence, gamma, ksi);
+            print(pi);
             double error = difference(transferProbability, oldTransferProbability);
             if (error < precision || FastMath.abs(error - lastError) < precision) {
                 log.info(viterbi("过去的一年,争取对人类作出新的更大的贡献"));
@@ -111,6 +112,7 @@ public class EmHmm {
             }
             lastError = error;
             iter++;
+            log.info(viterbi("过去的一年,争取对人类作出新的更大的贡献"));
 
         }
     }
@@ -420,12 +422,12 @@ public class EmHmm {
         Integer[][] path = new Integer[observationNum][stateNum];
         Double[][] deltas = new Double[observationNum][stateNum];
 
-        correctPi();
+//        correctPi();
         for (int i = 0; i < stateNum; i++) {
             deltas[0][i] = pi[i] + emissionProbability[i][observeSequence[0]];
             path[0][i] = i;
         }
-        correctA();
+//        correctA();
         for (int t = 1; t < observationNum; t++) {
             for (int i = 0; i < stateNum; i++) {
                 deltas[t][i] = deltas[t - 1][0] + transferProbability[0][i];
@@ -488,12 +490,12 @@ public class EmHmm {
             e.printStackTrace();
         }
         EmHmm hmm = new EmHmm();
-        hmm.randomInit(1);
+        hmm.randomInit(2);
         StringBuilder sb = new StringBuilder();
         for (String s : Objects.requireNonNull(fileLines)) {
             sb.append(s.replaceAll(" ", ""));
         }
         log.info("训练数据添加完毕");
-        hmm.train(hmm.sentence2int(sb.toString()), 10);
+        hmm.train(hmm.sentence2int(sb.toString()), 1000000);
     }
 }

@@ -30,8 +30,8 @@ train_data, test_data = get_train_test_data(args.embedding_random, args.max_len)
 vocab, word2id, embeddings = get_embedding(args.embedding_random, args.embedding_dim)
 
 configs = tf.ConfigProto()
-# configs.gpu_options.allow_growth = True
-# configs.gpu_options.per_process_gpu_memory_fraction = 0.2
+configs.gpu_options.allow_growth = True
+configs.gpu_options.per_process_gpu_memory_fraction = 0.2
 # paths setting
 paths = {}
 output_path = config.output_path

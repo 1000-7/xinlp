@@ -164,9 +164,11 @@ class BiLSTM_CRF:
                 self.logger.info(
                     '{} epoch {}, step {}, loss: {:.4}, global_step: {}'.format(start_time, epoch + 1, step + 1,
                                                                                 loss_train, step_num))
+
             self.file_writer.add_summary(summary, step_num)
             if epoch % 5 == 0:
                 saver.save(sess, self.model_path, global_step=step_num)
+
         self.logger.info('===========validation / test===========')
         label_list_dev, seq_len_list_dev = self.dev_one_epoch(sess, test)
         self.evaluate(label_list_dev, test, epoch)
@@ -193,7 +195,6 @@ class BiLSTM_CRF:
                 viterbi_seq, _ = tf.contrib.crf.viterbi_decode(logit[:seq_len], transition_params)
                 label_list.append(viterbi_seq)
             return label_list, seq_len_list
-
         else:
             label_list = sess.run(self.labels_softmax_, feed_dict=feed_dict)
             return label_list, seq_len_list
@@ -205,10 +206,7 @@ class BiLSTM_CRF:
             label2tag[label] = tag
 
         model_predict = []
-        d = 0
         for label_, (sent, tag) in zip(label_list_dev, test):
-            print(d)
-            d += 1
             tag_ = [label2tag[label__] for label__ in label_]
             sent_res = []
             if len(label_) != len(sent):
