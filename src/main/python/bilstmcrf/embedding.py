@@ -74,8 +74,8 @@ def pre_train_embedding(embedding_dim):
     for line in file:
         row = line.strip().split(' ')
         vocab.append(row[0])
-        embedding.append(np.float32(row[1:]))
+        embedding.append(row[1:])
         word2id[row[0]] = d
         d += 1
     file.close()
-    return vocab, word2id, embedding
+    return vocab, word2id, np.asarray(embedding)
