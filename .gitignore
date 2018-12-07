@@ -3,3 +3,11 @@
 将删除 target/
 将删除 xincrf.model
 将删除 xincrfc1.5.model
+.idea/
+logs/
+src/main/python/bilstmcrf/__pycache__/
+src/main/python/bilstmcrf/data/
+src/main/python/bilstmcrf/output/
+src/test/
+target/
+venv/

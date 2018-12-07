@@ -169,7 +169,7 @@ class BiLSTM_CRF:
                 saver.save(sess, self.model_path, global_step=step_num)
         self.logger.info('===========validation / test===========')
         label_list_dev, seq_len_list_dev = self.dev_one_epoch(sess, test)
-        self.evaluate(label_list_dev, test)
+        self.evaluate(label_list_dev, test, epoch)
 
     def dev_one_epoch(self, sess, test):
         label_list, seq_len_list = [], []
@@ -198,7 +198,7 @@ class BiLSTM_CRF:
             label_list = sess.run(self.labels_softmax_, feed_dict=feed_dict)
             return label_list, seq_len_list
 
-    def evaluate(self, label_list_dev, test, epoch):
+    def evaluate(self, label_list_dev, test, epoch=None):
         self.logger.info('===========正在进行评价===========')
         label2tag = {}
         for tag, label in self.tag2label.items():
