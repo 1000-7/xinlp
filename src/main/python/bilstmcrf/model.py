@@ -1,10 +1,11 @@
+import os
 import sys
 import time
 
 import tensorflow as tf
 
 from data import batch_yield
-from util import get_logger, generate_sequence_len
+from util import get_logger, generate_sequence_len, conlleval
 
 
 class BiLSTM_CRF:
@@ -147,7 +148,6 @@ class BiLSTM_CRF:
             self.evaluate(label_list, test)
 
     def run_one_epoch(self, sess, train, test, epoch, saver):
-
         num_batches = (len(train) + self.batch_size - 1) // self.batch_size
         start_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
         batches = batch_yield(train, self.batch_size)
@@ -180,12 +180,11 @@ class BiLSTM_CRF:
         return label_list, seq_len_list
 
     def predict_one_batch(self, sess, seqs, labels):
-        label_list, seq_len_list = [], []
+        seq_len_list = generate_sequence_len(self.max_len, self.batch_size)
         feed_dict = {self.word_ids: seqs, self.labels: labels,
                      self.lr_pl: self.lr,
                      self.dropout_pl: self.dropout_keep_prob,
-                     self.sequence_lengths: generate_sequence_len(
-                         self.max_len, self.batch_size)}
+                     self.sequence_lengths: seq_len_list}
         if self.useCRF:
             logits, transition_params = sess.run([self.logits, self.transition_params],
                                                  feed_dict=feed_dict)
@@ -199,11 +198,12 @@ class BiLSTM_CRF:
             label_list = sess.run(self.labels_softmax_, feed_dict=feed_dict)
             return label_list, seq_len_list
 
-    def evaluate(self, label_list_dev, test):
+    def evaluate(self, label_list_dev, test, epoch):
         self.logger.info('===========正在进行评价===========')
         label2tag = {}
         for tag, label in self.tag2label.items():
             label2tag[label] = tag
+
         model_predict = []
         d = 0
         for label_, (sent, tag) in zip(label_list_dev, test):
@@ -218,5 +218,8 @@ class BiLSTM_CRF:
             for i in range(len(sent)):
                 sent_res.append([sent[i], tag[i], tag_[i]])
             model_predict.append(sent_res)
-        print(model_predict)
-        return model_predict
+        epoch_num = str(epoch + 1) if epoch != None else 'test'
+        label_path = os.path.join(self.result_path, 'label_' + epoch_num)
+        metric_path = os.path.join(self.result_path, 'result_metric_' + epoch_num)
+        for _ in conlleval(model_predict, label_path, metric_path):
+            self.logger.info(_)
