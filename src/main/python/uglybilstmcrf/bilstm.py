@@ -1,12 +1,11 @@
-import numpy as np
 import tensorflow as tf
+
 from textpre import *
 
 logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 tag = ['B', 'E', 'M', 'S']
 tag_num = 4
 training_iters = 2000
-logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 
 # model parameter
 learning_rate = 0.001
@@ -108,13 +107,12 @@ def pre():
         logits, trans_params = sess.run([scores, transition_params],
                                         feed_dict={x: ids_list_list[100], y: tags_list_list[0],
                                                    sequence_lengths: sequence_lengths_batch[0]})
-       # keep only the valid steps
+        # keep only the valid steps
         viterbi_seq, viterbi_score = tf.contrib.crf.viterbi_decode(
-                logits[0], trans_params)
+            logits[0], trans_params)
         print(ids_list_list[100][0])
         print(tags_list_list[100][0])
         print(viterbi_seq)
-
 
 
 # train()

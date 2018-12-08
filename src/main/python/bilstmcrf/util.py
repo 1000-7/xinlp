@@ -1,8 +1,5 @@
 import argparse
 import logging
-import os
-
-import config
 
 
 def get_logger(filename):
@@ -34,24 +31,47 @@ def generate_sequence_len(max_len, batch_size):
 
 
 def conlleval(label_predict, label_path, metric_path):
-    """
-
-    :param label_predict:
-    :param label_path:
-    :param metric_path:
-    :return:
-    """
-    eval_perl = config.eval_perl
+    b_correct = 0
+    e_correct = 0
+    m_correct = 0
+    s_correct = 0
+    b_total = 0
+    e_total = 0
+    m_total = 0
+    s_total = 0
     with open(label_path, "w") as fw:
         line = []
         for sent_result in label_predict:
             for char, tag, tag_ in sent_result:
-                # tag = '0' if tag == 'O' else tag
-                # char = char.encode("utf-8")
+                if char == '0':
+                    continue
+                else:
+                    if tag == '0':
+                        b_total += 1
+                        if tag_ == tag:
+                            b_correct += 1
+                    elif tag == '1':
+                        e_total += 1
+                        if tag_ == tag:
+                            e_correct += 1
+                    elif tag == '2':
+                        m_total += 1
+                        if tag_ == tag:
+                            m_correct += 1
+                    elif tag == '3':
+                        s_total += 1
+                        if tag_ == tag:
+                            s_correct += 1
                 line.append("{} {} {}\n".format(char, tag, tag_))
             line.append("\n")
         fw.writelines(line)
-    os.system("perl {} < {} > {}".format(eval_perl, label_path, metric_path))
-    with open(metric_path) as fr:
-        metrics = [line.strip() for line in fr]
+    total = b_total + e_total + m_total + s_total
+    correct = b_correct + e_correct + m_correct + s_correct
+    metrics = ["测试的字数为{}，其中分词正确的字数为{}，准确率为{}".format(total, correct, correct / total),
+               "B的字数为{}，其中B被正确预测的字数为{}，准确率为{}".format(b_total, b_correct, b_correct / b_total),
+               "E的字数为{}，其中E被正确预测的字数为{}，准确率为{}".format(e_total, e_correct, e_correct / e_total),
+               "M的字数为{}，其中M被正确预测的字数为{}，准确率为{}".format(m_total, m_correct, m_correct / m_total),
+               "S的字数为{}，其中S被正确预测的字数为{}，准确率为{}".format(s_total, s_correct, s_correct / s_total)]
+    with open(metric_path, "w") as fw:
+        fw.writelines(metrics)
     return metrics
