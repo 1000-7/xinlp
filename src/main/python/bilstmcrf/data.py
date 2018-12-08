@@ -94,6 +94,8 @@ def batch_yield(data, batch_size):
             seqs, labels = [], []
         seqs.append(sentid_)
         labels.append(tag_)
+    if len(seqs) != 0:
+        yield seqs, labels
 
 # train_x, train_y, test_x, test_y = get_train_test_data(50)
 # print(train_y[0])
