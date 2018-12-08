@@ -20,7 +20,7 @@ parser.add_argument('--embedding_dim', type=int, default=300, help='字嵌入的
 parser.add_argument('--dropout', type=float, default=0.5, help='dropout保留比例')
 parser.add_argument('--useCRF', type=str2bool, default=True, help='是否使用CRF训练损失函数，默认是CRF，false是使用softmax')
 parser.add_argument('--max_len', type=int, default=50, help='句子最长个数')
-parser.add_argument('--mode', type=str, default='test', help='三种模式：train/test/predict')
+parser.add_argument('--mode', type=str, default='predict', help='三种模式：train/test/predict')
 parser.add_argument('--embedding_random', type=str, default=False,
                     help='使用随机的字嵌入（True）还是已经预训练好的（False），默认使用随机')
 
@@ -65,14 +65,14 @@ elif args.mode == 'test':
     model.build_graph()
     print("test data: {}".format(len(test_data)))
     model.test(test_data)
-elif args.mode == 'pretrain':
+elif args.mode == 'predict':
     ckpt_file = tf.train.latest_checkpoint(model_path)
     print(ckpt_file)
     paths['model_path'] = ckpt_file
-    model = BiLSTM_CRF(args, embeddings, tag2label, word2id, paths, config=config)
+    model = BiLSTM_CRF(args, embeddings, tag2label, word2id, paths, config=configs)
     model.build_graph()
     saver = tf.train.Saver()
-    with tf.Session(config=config) as sess:
+    with tf.Session(config=configs) as sess:
         print('============= demo =============')
         saver.restore(sess, ckpt_file)
         while 1:
