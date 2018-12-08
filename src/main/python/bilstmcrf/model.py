@@ -207,7 +207,7 @@ class BiLSTM_CRF:
         label_path = os.path.join(self.result_path, 'label_' + epoch_num)
         metric_path = os.path.join(self.result_path, 'result_metric_' + epoch_num)
         for _ in conlleval(model_predict, label_path, metric_path):
-            self.logger.info(_)
+            self.logger.info(_.strip())
 
     def test(self, test):
         saver = tf.train.Saver()
@@ -216,3 +216,14 @@ class BiLSTM_CRF:
             saver.restore(sess, self.model_path)
             label_list, seq_len_list = self.dev_one_epoch(sess, test)
             self.evaluate(label_list, test)
+
+    def predict_sentence(self, sess, demo_data):
+        label_list = []
+        for seqs, labels in batch_yield(demo_data, self.batch_size):
+            label_list_, _ = self.predict_one_batch(sess, seqs, labels)
+            label_list.extend(label_list_)
+        label2tag = {}
+        for tag, label in self.tag2label.items():
+            label2tag[label] = tag
+        tags = [label2tag[label] for label in label_list[0]]
+        return tags

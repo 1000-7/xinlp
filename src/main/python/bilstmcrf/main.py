@@ -4,7 +4,7 @@ import os
 import tensorflow as tf
 
 import config
-from data import get_train_test_data, tag2label
+from data import get_train_test_data, tag2label, sentence2id
 from embedding import get_embedding
 from model import BiLSTM_CRF
 from util import str2bool
@@ -19,7 +19,7 @@ parser.add_argument('--update_embedding', type=str2bool, default=False, help='�
 parser.add_argument('--embedding_dim', type=int, default=300, help='字嵌入的维度')
 parser.add_argument('--dropout', type=float, default=0.5, help='dropout保留比例')
 parser.add_argument('--useCRF', type=str2bool, default=True, help='是否使用CRF训练损失函数，默认是CRF，false是使用softmax')
-parser.add_argument('--max_len', type=int, default=50, help='字嵌入的维度')
+parser.add_argument('--max_len', type=int, default=50, help='句子最长个数')
 parser.add_argument('--mode', type=str, default='test', help='三种模式：train/test/predict')
 parser.add_argument('--embedding_random', type=str, default=False,
                     help='使用随机的字嵌入（True）还是已经预训练好的（False），默认使用随机')
@@ -65,3 +65,27 @@ elif args.mode == 'test':
     model.build_graph()
     print("test data: {}".format(len(test_data)))
     model.test(test_data)
+elif args.mode == 'pretrain':
+    ckpt_file = tf.train.latest_checkpoint(model_path)
+    print(ckpt_file)
+    paths['model_path'] = ckpt_file
+    model = BiLSTM_CRF(args, embeddings, tag2label, word2id, paths, config=config)
+    model.build_graph()
+    saver = tf.train.Saver()
+    with tf.Session(config=config) as sess:
+        print('============= demo =============')
+        saver.restore(sess, ckpt_file)
+        while 1:
+            print('Please input your sentence:')
+            demo_sent = input()
+            if demo_sent == '' or demo_sent.isspace():
+                print('See you next time!')
+                break
+            else:
+                demo_id = sentence2id(demo_sent, word2id)
+                length = len(demo_id)
+                for i in range(length, args.max_len):
+                    demo_id.append(0)
+                demo_data = [(demo_sent, ['O'] * args.max_len)]
+                tags = model.predict_sentence(sess, demo_data)
+                print(tags)
