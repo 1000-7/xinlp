@@ -139,14 +139,6 @@ class BiLSTM_CRF:
             for epoch in range(self.epoch_num):
                 self.run_one_epoch(sess, train, test, epoch, saver)
 
-    def test(self, test):
-        saver = tf.train.Saver()
-        with tf.Session(config=self.config) as sess:
-            self.logger.info('=========== testing ===========')
-            saver.restore(sess, self.model_path)
-            label_list, seq_len_list = self.dev_one_epoch(sess, test)
-            self.evaluate(label_list, test)
-
     def run_one_epoch(self, sess, train, test, epoch, saver):
         num_batches = (len(train) + self.batch_size - 1) // self.batch_size
         start_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
@@ -211,8 +203,16 @@ class BiLSTM_CRF:
             for i in range(len(sent)):
                 sent_res.append([sent[i], tag[i], label_[i]])
             model_predict.append(sent_res)
-        epoch_num = str(epoch + 1) if epoch != None else 'test'
+        epoch_num = str(epoch + 1) if epoch is not None else 'test'
         label_path = os.path.join(self.result_path, 'label_' + epoch_num)
         metric_path = os.path.join(self.result_path, 'result_metric_' + epoch_num)
         for _ in conlleval(model_predict, label_path, metric_path):
             self.logger.info(_)
+
+    def test(self, test):
+        saver = tf.train.Saver()
+        with tf.Session(config=self.config) as sess:
+            self.logger.info('=========== testing ===========')
+            saver.restore(sess, self.model_path)
+            label_list, seq_len_list = self.dev_one_epoch(sess, test)
+            self.evaluate(label_list, test)
