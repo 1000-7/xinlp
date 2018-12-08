@@ -42,7 +42,7 @@ class BiLSTM_CRF:
     def add_placeholders(self):
         self.word_ids = tf.placeholder(tf.int32, shape=[None, self.max_len], name="word_ids")
         self.labels = tf.placeholder(tf.int32, shape=[None, self.max_len], name="labels")
-        self.sequence_lengths = tf.placeholder(tf.int32, shape=[self.batch_size], name="sequence_lengths")
+        self.sequence_lengths = tf.placeholder(tf.int32, shape=[None], name="sequence_lengths")
 
         self.dropout_pl = tf.placeholder(dtype=tf.float32, shape=[], name="dropout")
         self.lr_pl = tf.placeholder(dtype=tf.float32, shape=[], name="lr")
@@ -173,8 +173,10 @@ class BiLSTM_CRF:
             seq_len_list.extend(seq_len_list_)
         return label_list, seq_len_list
 
-    def predict_one_batch(self, sess, seqs, labels):
+    def predict_one_batch(self, sess, seqs, labels, is_train=True):
         seq_len_list = generate_sequence_len(self.max_len, self.batch_size)
+        if is_train is False:
+            seq_len_list = [self.max_len]
         feed_dict = {self.word_ids: seqs, self.labels: labels,
                      self.lr_pl: self.lr,
                      self.dropout_pl: self.dropout_keep_prob,
@@ -220,7 +222,7 @@ class BiLSTM_CRF:
     def predict_sentence(self, sess, demo_data):
         label_list = []
         for seqs, labels in batch_yield(demo_data, self.batch_size):
-            label_list_, _ = self.predict_one_batch(sess, seqs, labels)
+            label_list_, _ = self.predict_one_batch(sess, seqs, labels, is_train=False)
             label_list.extend(label_list_)
         label2tag = {}
         for tag, label in self.tag2label.items():
