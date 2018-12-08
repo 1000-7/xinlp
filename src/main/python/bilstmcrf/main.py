@@ -15,13 +15,13 @@ parser.add_argument('--epoch', type=int, default=40, help='#训练次数')
 parser.add_argument('--hidden_dim', type=int, default=128, help='#Lstm里隐藏状态的维度')
 parser.add_argument('--optimizer', type=str, default='Adam', help='Adam/Adadelta/Adagrad/RMSProp/Momentum/SGD')
 parser.add_argument('--lr', type=float, default=0.001, help='学习率')
-parser.add_argument('--update_embedding', type=str2bool, default=True, help='默认训练')
+parser.add_argument('--update_embedding', type=str2bool, default=False, help='默认训练')
 parser.add_argument('--embedding_dim', type=int, default=300, help='字嵌入的维度')
 parser.add_argument('--dropout', type=float, default=0.5, help='dropout保留比例')
 parser.add_argument('--useCRF', type=str2bool, default=True, help='是否使用CRF训练损失函数，默认是CRF，false是使用softmax')
 parser.add_argument('--max_len', type=int, default=50, help='字嵌入的维度')
 parser.add_argument('--mode', type=str, default='test', help='三种模式：train/test/predict')
-parser.add_argument('--embedding_random', type=str, default=True,
+parser.add_argument('--embedding_random', type=str, default=False,
                     help='使用随机的字嵌入（True）还是已经预训练好的（False），默认使用随机')
 
 args = parser.parse_args()

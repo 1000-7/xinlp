@@ -43,7 +43,7 @@ def conlleval(label_predict, label_path, metric_path):
         line = []
         for sent_result in label_predict:
             for char, tag, tag_ in sent_result:
-                if char == '0':
+                if char == 0:
                     continue
                 else:
                     if tag == 0:
@@ -67,11 +67,11 @@ def conlleval(label_predict, label_path, metric_path):
         fw.writelines(line)
     total = b_total + e_total + m_total + s_total
     correct = b_correct + e_correct + m_correct + s_correct
-    metrics = ["测试的字数为{}，其中分词正确的字数为{}，准确率为{}".format(total, correct, correct / total),
-               "B的字数为{}，其中B被正确预测的字数为{}，准确率为{}".format(b_total, b_correct, b_correct / b_total),
-               "E的字数为{}，其中E被正确预测的字数为{}，准确率为{}".format(e_total, e_correct, e_correct / e_total),
-               "M的字数为{}，其中M被正确预测的字数为{}，准确率为{}".format(m_total, m_correct, m_correct / m_total),
-               "S的字数为{}，其中S被正确预测的字数为{}，准确率为{}".format(s_total, s_correct, s_correct / s_total)]
+    metrics = ["测试的字数为{}，其中分词正确的字数为{}，准确率为{}\n".format(total, correct, correct / total),
+               "B的字数为{}，其中B被正确预测的字数为{}，准确率为{}\n".format(b_total, b_correct, b_correct / b_total),
+               "E的字数为{}，其中E被正确预测的字数为{}，准确率为{}\n".format(e_total, e_correct, e_correct / e_total),
+               "M的字数为{}，其中M被正确预测的字数为{}，准确率为{}\n".format(m_total, m_correct, m_correct / m_total),
+               "S的字数为{}，其中S被正确预测的字数为{}，准确率为{}\n".format(s_total, s_correct, s_correct / s_total)]
     with open(metric_path, "w") as fw:
         fw.writelines(metrics)
     return metrics
