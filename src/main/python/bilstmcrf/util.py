@@ -46,19 +46,19 @@ def conlleval(label_predict, label_path, metric_path):
                 if char == '0':
                     continue
                 else:
-                    if tag == '0':
+                    if tag == 0:
                         b_total += 1
                         if tag_ == tag:
                             b_correct += 1
-                    elif tag == '1':
+                    elif tag == 1:
                         e_total += 1
                         if tag_ == tag:
                             e_correct += 1
-                    elif tag == '2':
+                    elif tag == 2:
                         m_total += 1
                         if tag_ == tag:
                             m_correct += 1
-                    elif tag == '3':
+                    elif tag == 3:
                         s_total += 1
                         if tag_ == tag:
                             s_correct += 1
