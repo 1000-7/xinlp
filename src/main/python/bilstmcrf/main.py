@@ -86,6 +86,7 @@ elif args.mode == 'predict':
                 length = len(demo_id)
                 for i in range(length, args.max_len):
                     demo_id.append(0)
-                demo_data = [(demo_sent, ['O'] * args.max_len)]
+                demo_data = [(demo_id, [0] * args.max_len)]
+                print(demo_data)
                 tags = model.predict_sentence(sess, demo_data)
                 print(tags)
