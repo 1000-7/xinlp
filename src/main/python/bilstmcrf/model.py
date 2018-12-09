@@ -153,10 +153,9 @@ class BiLSTM_CRF:
                 self.logger.info(
                     '{} epoch {}, step {}, loss: {:.4}, global_step: {}'.format(start_time, epoch + 1, step + 1,
                                                                                 loss_train, step_num))
+                saver.save(sess, self.model_path, global_step=step_num)
 
             self.file_writer.add_summary(summary, step_num)
-            if epoch % 5 == 0:
-                saver.save(sess, self.model_path, global_step=step_num)
 
         self.logger.info('===========validation / test===========')
         label_list_dev, seq_len_list_dev = self.dev_one_epoch(sess, test)
