@@ -4,8 +4,8 @@ import time
 
 import tensorflow as tf
 
-from data import batch_yield
-from util import get_logger, generate_sequence_len, conlleval
+from data import batch_yield, get_feed_dict
+from util import get_logger, conlleval
 
 
 class BiLSTM_CRF:
@@ -40,8 +40,8 @@ class BiLSTM_CRF:
         self.init_op()
 
     def add_placeholders(self):
-        self.word_ids = tf.placeholder(tf.int32, shape=[None, self.max_len], name="word_ids")
-        self.labels = tf.placeholder(tf.int32, shape=[None, self.max_len], name="labels")
+        self.word_ids = tf.placeholder(tf.int32, shape=[None, None], name="word_ids")
+        self.labels = tf.placeholder(tf.int32, shape=[None, None], name="labels")
         self.sequence_lengths = tf.placeholder(tf.int32, shape=[None], name="sequence_lengths")
 
         self.dropout_pl = tf.placeholder(dtype=tf.float32, shape=[], name="dropout")
@@ -146,12 +146,9 @@ class BiLSTM_CRF:
         for step, (seqs, labels) in enumerate(batches):
             sys.stdout.write(' processing: {} batch / {} batches.'.format(step + 1, num_batches) + '\r')
             step_num = epoch * num_batches + step + 1
+            feed_dict, _ = get_feed_dict(seqs, labels)
             _, loss_train, summary, step_num_ = sess.run([self.train_op, self.loss, self.merged, self.global_step],
-                                                         feed_dict={self.word_ids: seqs, self.labels: labels,
-                                                                    self.lr_pl: self.lr,
-                                                                    self.dropout_pl: self.dropout_keep_prob,
-                                                                    self.sequence_lengths: generate_sequence_len(
-                                                                        self.max_len, self.batch_size)})
+                                                         feed_dict=feed_dict)
             if step + 1 == 1 or (step + 1) % 300 == 0 or step + 1 == num_batches:
                 self.logger.info(
                     '{} epoch {}, step {}, loss: {:.4}, global_step: {}'.format(start_time, epoch + 1, step + 1,
@@ -173,14 +170,8 @@ class BiLSTM_CRF:
             seq_len_list.extend(seq_len_list_)
         return label_list, seq_len_list
 
-    def predict_one_batch(self, sess, seqs, labels, is_train=True):
-        seq_len_list = generate_sequence_len(self.max_len, self.batch_size)
-        if is_train is False:
-            seq_len_list = [self.max_len]
-        feed_dict = {self.word_ids: seqs, self.labels: labels,
-                     self.lr_pl: self.lr,
-                     self.dropout_pl: self.dropout_keep_prob,
-                     self.sequence_lengths: seq_len_list}
+    def predict_one_batch(self, sess, seqs, labels):
+        feed_dict, seq_len_list = get_feed_dict(seqs, labels)
         if self.useCRF:
             logits, transition_params = sess.run([self.logits, self.transition_params],
                                                  feed_dict=feed_dict)
@@ -222,7 +213,7 @@ class BiLSTM_CRF:
     def predict_sentence(self, sess, demo_data):
         label_list = []
         for seqs, labels in batch_yield(demo_data, self.batch_size):
-            label_list_, _ = self.predict_one_batch(sess, seqs, labels, is_train=False)
+            label_list_, _ = self.predict_one_batch(sess, seqs, labels)
             label_list.extend(label_list_)
         label2tag = {}
         for tag, label in self.tag2label.items():

@@ -23,6 +23,7 @@ def str2bool(v):
         raise argparse.ArgumentTypeError('Boolean value expected.')
 
 
+# 本来希望统一生成seq—max-len都按照max_len去使用
 def generate_sequence_len(max_len, batch_size):
     sequence_len = []
     for i in range(batch_size):

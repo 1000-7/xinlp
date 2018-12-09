@@ -84,9 +84,9 @@ elif args.mode == 'predict':
             else:
                 demo_id = sentence2id(demo_sent, word2id)
                 length = len(demo_id)
-                for i in range(length, args.max_len):
-                    demo_id.append(0)
-                demo_data = [(demo_id, [0] * args.max_len)]
+                if length > args.max_len:
+                    print('Inputs is too long ')
+                demo_data = [(demo_id, [0] * length)]
                 print(demo_data)
                 tags = model.predict_sentence(sess, demo_data)
-                print(tags)
+                print(tags[:length])

@@ -15,7 +15,7 @@ y = np.random.randint(
     num_tags, size=[num_examples, num_words]).astype(np.int32)
 
 # 获取样本句长向量（因为每一个样本可能包含不一样多的词），在这里统一设为 num_words - 1，真实情况下根据需要设置
-sequence_lengths = np.full(num_examples, num_words - 1, dtype=np.int32)
+sequence_lengths = np.full(num_examples, num_words - np.random.randint(1, 3), dtype=np.int32)
 
 # 训练，评估模型
 with tf.Graph().as_default():
@@ -23,7 +23,7 @@ with tf.Graph().as_default():
         x_t = tf.constant(x)
         y_t = tf.constant(y)
         sequence_lengths_t = tf.constant(sequence_lengths)
-
+        print(sequence_lengths_t)
         # 在这里设置一个无偏置的线性层
         weights = tf.get_variable("weights", [num_features, num_tags])
         matricized_x_t = tf.reshape(x_t, [-1, num_features])

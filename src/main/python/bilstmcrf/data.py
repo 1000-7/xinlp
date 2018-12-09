@@ -42,12 +42,32 @@ def read_corpus(random, max_len):
                 sentid_, sent_, tag_ = [], [], []
             else:
                 sentid_, sent_, tag_ = [], [], []
-    padding_tags = tflearn.data_utils.pad_sequences(tags_, maxlen=max_len, value=3)
-    padding_sentsid = tflearn.data_utils.pad_sequences(sentsid_, maxlen=max_len, value=0)
+    # 在get_feed_dict去padding，不事先padding好了
+    # padding_tags = tflearn.data_utils.pad_sequences(tags_, maxlen=max_len, value=3)
+    # padding_sentsid = tflearn.data_utils.pad_sequences(sentsid_, maxlen=max_len, value=0)
     # print(sents_[0])
     # print(padding_sentsid[0])
     # print(padding_tags[0])
-    return padding_sentsid, sents_, padding_tags
+    return sentid_, sents_, tags_
+
+
+def pad_sequences(seqs, pad_mark):
+    batch_max_len = max(map(lambda x: len(x), seqs))
+    seq_len_list = []
+    for seq in seqs:
+        seq_len_list.append(min(len(seq), batch_max_len))
+    padding_seqs = tflearn.data_utils.pad_sequences(seqs, maxlen=batch_max_len, value=pad_mark)
+    return padding_seqs, seq_len_list
+
+
+def get_feed_dict(self, seqs, labels=None):
+    word_ids, seq_len_list = pad_sequences(seqs, pad_mark=0)
+    tags, _ = pad_sequences(labels, pad_mark=3)
+    feed_dict = {self.word_ids: word_ids, self.labels: tags,
+                 self.lr_pl: self.lr,
+                 self.dropout_pl: self.dropout_keep_prob,
+                 self.sequence_lengths: seq_len_list}
+    return feed_dict, seq_len_list
 
 
 def sentence2id(sent, word2id):
@@ -81,7 +101,6 @@ def get_train_test_data(embedding_random, max_len):
             train_data.append((sentid_, tag_))
         else:
             test_data.append((sentid_, tag_))
-
     return train_data, test_data
 
 
@@ -94,6 +113,7 @@ def batch_yield(data, batch_size):
             seqs, labels = [], []
         seqs.append(sentid_)
         labels.append(tag_)
+    # 为了考虑predict只有一个，也得返回
     if len(seqs) != 0:
         yield seqs, labels
 
