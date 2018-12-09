@@ -66,17 +66,6 @@ def pad_sequences(seqs, pad_mark):
     return padding_seqs, seq_len_list
 
 
-def get_feed_dict(self, seqs, labels=None):
-    word_ids, seq_len_list = pad_sequences(seqs, pad_mark=0)
-    print('语句信息以结束')
-    feed_dict = {self.word_ids: word_ids, self.sequence_lengths: seq_len_list, self.lr_pl: self.lr,
-                 self.dropout_pl: self.dropout_keep_prob}
-    if labels is not None:
-        tags, _ = pad_sequences(labels, pad_mark=3)
-        feed_dict[self.labels] = tags
-    return feed_dict, seq_len_list
-
-
 def sentence2id(sent, word2id):
     sentid_ = []
     for char in sent:

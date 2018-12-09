@@ -4,7 +4,7 @@ import time
 
 import tensorflow as tf
 
-from data import batch_yield, get_feed_dict
+from data import batch_yield, pad_sequences
 from util import get_logger, conlleval
 
 
@@ -146,7 +146,7 @@ class BiLSTM_CRF:
         for step, (seqs, labels) in enumerate(batches):
             sys.stdout.write(' processing: {} batch / {} batches.'.format(step + 1, num_batches) + '\r')
             step_num = epoch * num_batches + step + 1
-            feed_dict, _ = get_feed_dict(seqs, labels)
+            feed_dict, _ = self.get_feed_dict(seqs, labels)
             _, loss_train, summary, step_num_ = sess.run([self.train_op, self.loss, self.merged, self.global_step],
                                                          feed_dict=feed_dict)
             if step + 1 == 1 or (step + 1) % 300 == 0 or step + 1 == num_batches:
@@ -162,6 +162,16 @@ class BiLSTM_CRF:
         label_list_dev, seq_len_list_dev = self.dev_one_epoch(sess, test)
         self.evaluate(label_list_dev, test, epoch)
 
+    def get_feed_dict(self, seqs, labels=None):
+        word_ids, seq_len_list = pad_sequences(seqs, pad_mark=0)
+        print('语句信息以结束')
+        feed_dict = {self.word_ids: word_ids, self.sequence_lengths: seq_len_list, self.lr_pl: self.lr,
+                     self.dropout_pl: self.dropout_keep_prob}
+        if labels is not None:
+            tags, _ = pad_sequences(labels, pad_mark=3)
+            feed_dict[self.labels] = tags
+        return feed_dict, seq_len_list
+
     def dev_one_epoch(self, sess, test):
         label_list, seq_len_list = [], []
         for seqs, labels in batch_yield(test, self.batch_size):
@@ -171,7 +181,7 @@ class BiLSTM_CRF:
         return label_list, seq_len_list
 
     def predict_one_batch(self, sess, seqs, labels):
-        feed_dict, seq_len_list = get_feed_dict(seqs, labels)
+        feed_dict, seq_len_list = self.get_feed_dict(seqs, labels)
         if self.useCRF:
             logits, transition_params = sess.run([self.logits, self.transition_params],
                                                  feed_dict=feed_dict)
