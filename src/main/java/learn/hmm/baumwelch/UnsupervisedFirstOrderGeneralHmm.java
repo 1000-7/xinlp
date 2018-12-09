@@ -529,7 +529,7 @@ public class UnsupervisedFirstOrderGeneralHmm {
         //关闭日志打印
         //CONLPLogger.closeLogger(hmm.logger);
         //由于是监督学习的语料所以这里需要去掉其中的分隔符
-        String path = "src/pku_training.splitBy2space.utf8";
+        String path = "/Users/unclewang/Idea_Projects/xinlp/src/main/resources/pku_training.splitBy2space.utf8";
         String data = IOUtils.readText(path, "utf-8");
         String[] d2 = data.split("  ");
         StringBuilder sb = new StringBuilder();
@@ -547,7 +547,7 @@ public class UnsupervisedFirstOrderGeneralHmm {
         //hmm.randomInitA();
         //hmm.randomInitB();
         //hmm.randomInitPi();
-        //hmm.randomInitAllParameters();
+//        hmm.randomInitAllParameters();
         //设置先验信息至少设置参数pi，A，B中的一个
         hmm.setPriorPi(new double[]{-1.138130826175848, -2.632826946498266, -1.138130826175848, -1.2472622308278396});
         hmm.setPriorTransferProbability1((double[][]) IOUtils.readObject("src/A"));
