@@ -48,7 +48,7 @@ def read_corpus(random, max_len):
     # print(sents_[0])
     # print(padding_sentsid[0])
     # print(padding_tags[0])
-    return sentid_, sents_, tags_
+    return sentsid_, sents_, tags_
 
 
 def pad_sequences(seqs, pad_mark):
@@ -104,7 +104,7 @@ def get_train_test_data(embedding_random, max_len):
     return train_data, test_data
 
 
-def batch_yield(data, batch_size):
+def batch_yield(data, batch_size, is_train=True):
     random.shuffle(data)
     seqs, labels = [], []
     for (sentid_, tag_) in data:
@@ -114,7 +114,7 @@ def batch_yield(data, batch_size):
         seqs.append(sentid_)
         labels.append(tag_)
     # 为了考虑predict只有一个，也得返回
-    if len(seqs) != 0:
+    if is_train is False:
         yield seqs, labels
 
 # train_x, train_y, test_x, test_y = get_train_test_data(50)

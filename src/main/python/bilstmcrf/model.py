@@ -212,7 +212,7 @@ class BiLSTM_CRF:
 
     def predict_sentence(self, sess, demo_data):
         label_list = []
-        for seqs, labels in batch_yield(demo_data, self.batch_size):
+        for seqs, labels in batch_yield(demo_data, self.batch_size, is_train=False):
             label_list_, _ = self.predict_one_batch(sess, seqs, labels)
             label_list.extend(label_list_)
         label2tag = {}
