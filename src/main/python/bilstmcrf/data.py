@@ -89,15 +89,15 @@ def get_train_test_data(embedding_random, max_len):
     data = []
     train_data = []
     test_data = []
-    padding_sentsid, sents_, padding_tags = read_corpus(embedding_random, max_len)
-    l = len(sents_)
+    sentid_, sents_, tags_ = read_corpus(embedding_random, max_len)
+    l = len(tags_)
     for i in range(l):
-        data.append((padding_sentsid[i], padding_tags[i]))
+        data.append((sentid_[i], sentid_[i]))
     random.shuffle(data)
 
     for i in range(l):
         (sentid_, tag_) = data[i]
-        if i < 0.9 * l:
+        if i < 0.95 * l:
             train_data.append((sentid_, tag_))
         else:
             test_data.append((sentid_, tag_))
