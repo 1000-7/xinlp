@@ -52,12 +52,13 @@ def read_corpus(random, max_len):
 
 
 def pad_sequences(seqs, pad_mark):
-    batch_max_len = 0
-    print(seqs)
-    for seq in seqs:
-        if seq is not None:
-            if len(seq) > batch_max_len:
-                batch_max_len = len(seq)
+    batch_max_len = max(map(lambda x: len(x), sequences))
+    # batch_max_len = 0
+    # # print(seqs)
+    # for seq in seqs:
+    #     if seq is not None:
+    #         if len(seq) > batch_max_len:
+    #             batch_max_len = len(seq)
 
     seq_len_list = []
     for seq in seqs:
