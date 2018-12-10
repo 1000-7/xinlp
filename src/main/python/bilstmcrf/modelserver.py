@@ -60,23 +60,23 @@ paths['model_path'] = ckpt_file
 model = BiLSTM_CRF(args, embeddings, tag2label, word2id, paths, config=configs)
 model.build_graph()
 
+saver = tf.train.Saver()
+sess = tf.Session(config=configs)
+saver.restore(sess, ckpt_file)
 
 
 def predict(demo_sent):
-    saver = tf.train.Saver()
-    with tf.Session(config=configs) as sess:
-        print('============= demo =============')
-        saver.restore(sess, ckpt_file)
-        demo_id = sentence2id(demo_sent, word2id)
-        length = len(demo_id)
-        if length > args.max_len:
-            print('Inputs is too long ')
-        demo_data = [(demo_id, [0] * length)]
+    print('============= 开始预测 =============')
+    demo_id = sentence2id(demo_sent, word2id)
+    length = len(demo_id)
+    if length > args.max_len:
+        print('Inputs is too long ')
+    demo_data = [(demo_id, [0] * length)]
 
-        print(demo_sent)
-        tags = model.predict_sentence(sess, demo_data)
-        print(tags[:length])
-        return json.dumps(tags[:length])
+    print(demo_sent)
+    tags = model.predict_sentence(sess, demo_data)
+    print(tags[:length])
+    return json.dumps(tags[:length])
 
 
 class IndexHandler(RequestHandler):
