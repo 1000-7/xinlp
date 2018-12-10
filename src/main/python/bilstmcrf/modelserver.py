@@ -1,4 +1,5 @@
 import argparse
+import json
 import os
 
 import tensorflow as tf
@@ -17,17 +18,16 @@ parser.add_argument('--epoch', type=int, default=40, help='#训练次数')
 parser.add_argument('--hidden_dim', type=int, default=128, help='#Lstm里隐藏状态的维度')
 parser.add_argument('--optimizer', type=str, default='Adam', help='Adam/Adadelta/Adagrad/RMSProp/Momentum/SGD')
 parser.add_argument('--lr', type=float, default=0.001, help='学习率')
-parser.add_argument('--update_embedding', type=str2bool, default=False, help='默认训练')
 parser.add_argument('--embedding_dim', type=int, default=300, help='字嵌入的维度')
 parser.add_argument('--dropout', type=float, default=0.5, help='dropout保留比例')
 parser.add_argument('--useCRF', type=str2bool, default=True, help='是否使用CRF训练损失函数，默认是CRF，false是使用softmax')
 parser.add_argument('--max_len', type=int, default=50, help='句子最长个数')
 parser.add_argument('--mode', type=str, default='predict', help='三种模式：train/test/predict')
-parser.add_argument('--embedding_random', type=str, default=False,
+parser.add_argument('--embedding_random', type=str, default=True,
                     help='使用随机的字嵌入（True）还是已经预训练好的（False），默认使用随机')
+parser.add_argument('--update_embedding', type=str2bool, default=True, help='默认训练')
 
 args = parser.parse_args()
-
 train_data, test_data = get_train_test_data(args.embedding_random, args.max_len)
 vocab, word2id, embeddings = get_embedding(args.embedding_random, args.embedding_dim)
 
@@ -59,22 +59,24 @@ print(ckpt_file)
 paths['model_path'] = ckpt_file
 model = BiLSTM_CRF(args, embeddings, tag2label, word2id, paths, config=configs)
 model.build_graph()
-saver = tf.train.Saver()
-with tf.Session(config=configs) as sess:
-    print('============= demo =============')
-    saver.restore(sess, ckpt_file)
+
 
 
 def predict(demo_sent):
-    demo_id = sentence2id(demo_sent, word2id)
-    length = len(demo_id)
-    if length > args.max_len:
-        print('Inputs is too long ')
-    demo_data = [(demo_id, [0] * length)]
-    print(demo_data)
-    tags = model.predict_sentence(sess, demo_data)
-    print(tags[:length])
-    return tags[:length]
+    saver = tf.train.Saver()
+    with tf.Session(config=configs) as sess:
+        print('============= demo =============')
+        saver.restore(sess, ckpt_file)
+        demo_id = sentence2id(demo_sent, word2id)
+        length = len(demo_id)
+        if length > args.max_len:
+            print('Inputs is too long ')
+        demo_data = [(demo_id, [0] * length)]
+
+        print(demo_sent)
+        tags = model.predict_sentence(sess, demo_data)
+        print(tags[:length])
+        return json.dumps(tags[:length])
 
 
 class IndexHandler(RequestHandler):
@@ -85,7 +87,9 @@ class IndexHandler(RequestHandler):
     def get(self):
         # 获取get方式传递的参数
         sent = self.get_query_argument("sent")
-        self.write(predict(sent))
+        print(sent)
+        print(predict(sent))
+        self.write(predict(str(sent)))
 
     def post(self):
         # 获取post方式传递的参数
@@ -94,6 +98,6 @@ class IndexHandler(RequestHandler):
 
 
 if __name__ == "__main__":
-    app = Application([(r"/", IndexHandler)])
-    app.listen(8000)
+    app = Application([(r"/predict", IndexHandler)])
+    app.listen(9006)
     IOLoop.current().start()

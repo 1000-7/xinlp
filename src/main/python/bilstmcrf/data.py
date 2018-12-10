@@ -86,10 +86,11 @@ def get_train_test_data(embedding_random, max_len):
     data = []
     train_data = []
     test_data = []
-    sentid_, sents_, tags_ = read_corpus(embedding_random, max_len)
+    sentids_, sents_, tags_ = read_corpus(embedding_random, max_len)
+
     l = len(tags_)
     for i in range(l):
-        data.append((sentid_[i], tags_[i]))
+        data.append((sentids_[i], tags_[i]))
     random.shuffle(data)
 
     for i in range(l):
