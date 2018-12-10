@@ -5,7 +5,7 @@
 先是学习了EM算法，实现了GMM高斯混合模型 \
 高斯混合模型和kmeans很像，亲身测试男女身高这种事情GMM很难训练出来的 
 
-###相关博客
+### 相关博客
 https://www.unclewang.info/learn/machine-learning/730/ \
 https://www.unclewang.info/learn/machine-learning/735/
 
