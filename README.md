@@ -39,5 +39,6 @@ https://www.unclewang.info/learn/machine-learning/756/
 用lucene的时候，看见了一个叫SmartChineseAnalyzer的支持中文分词，效果不咋的，发现竟然用的HMM分词，当时一句"我的天"，于是就想自己也写一个。。。 \
 2018.12.11   自己的HMM分词器已经支持了
 ### 相关博客
+https://www.unclewang.info/learn/java/760/
 ## 使用到的各种数据
 链接: https://pan.baidu.com/s/1kY6MfAJB90lFzv-9WEVhDw 提取码: vywm 
