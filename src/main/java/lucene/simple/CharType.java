@@ -50,7 +50,7 @@ public class CharType implements Serializable {
     static {
         charType = new byte[65536];
         try {
-            ObjectInputStream ois = new ObjectInputStream(new FileInputStream("/Users/unclewang/Idea_Projects/xinlp/src/main/resources/chartype/chartype.bin"));
+            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(System.getProperty("user.dir") + "/src/main/resources/chartype/chartype.bin"));
             ois.read(charType);
             ois.close();
         } catch (IOException e) {
