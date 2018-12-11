@@ -8,7 +8,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class TestDAT {
+/**
+ * @Author unclewang
+ * @Date 2018-12-10 15:21
+ */
+public class DatTest {
     @Test
     public void test() {
         List<String> strings = new ArrayList<>();
