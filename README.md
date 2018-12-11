@@ -35,5 +35,9 @@ ugly版本是第一遍直接实现的，因为以前也没怎么好好写过pyth
 ### 相关博客
 https://www.unclewang.info/learn/machine-learning/756/
 
+## 自己实现一个支持lucene的分词器——XinAnalyzer
+用lucene的时候，看见了一个叫SmartChineseAnalyzer的支持中文分词，效果不咋的，发现竟然用的HMM分词，当时一句"我的天"，于是就想自己也写一个。。。 \
+2018.12.11   自己的HMM分词器已经支持了
+### 相关博客
 ## 使用到的各种数据
 链接: https://pan.baidu.com/s/1kY6MfAJB90lFzv-9WEVhDw 提取码: vywm 
