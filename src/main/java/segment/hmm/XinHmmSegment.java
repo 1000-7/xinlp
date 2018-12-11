@@ -6,16 +6,14 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import lucene.simple.Atom;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Test;
-import segment.crf.XinCRFConfig;
 
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 
 /**
  * viterbi算法
@@ -64,7 +62,7 @@ import java.util.Map;
  */
 @Data
 @Slf4j
-public class ViterbiHmm {
+public class XinHmmSegment {
 
     private static char[] state = new char[]{'B', 'E', 'M', 'S'};
     /**
@@ -100,6 +98,12 @@ public class ViterbiHmm {
      */
     private BiMap<String, Integer> wordId;
 
+
+    public XinHmmSegment() {
+        initLambda();
+
+    }
+
     /**
      * 使用jieba分词使用的概率
      */
@@ -109,20 +113,38 @@ public class ViterbiHmm {
         initB();
     }
 
+    public List<Atom> seg(String text) {
+        String segResult = viterbi(text);
+        List<Atom> atoms = new ArrayList<>();
+        String[] strings = segResult.split("[\t\n]");
+        int d = 0;
+        for (String s : strings) {
+            Atom atom = new Atom();
+            atom.setContent(s);
+            atom.setOffe(d);
+            atom.setLen(s.length());
+            atom.setChars(s.toCharArray());
+            d += s.length();
+            atoms.add(atom);
+        }
+        return atoms;
+    }
 
     /**
      * 维特比算法
      */
-    public void viterbi(String s) {
+    public String viterbi(String s) {
         initLambda();
         String[] sentences = s.split("[,.?;。，]");
+        StringBuilder sb = new StringBuilder();
         for (String sentence : sentences) {
-            viterbi(str2int(sentence));
+            sb.append(viterbi(str2int(sentence)) + "\n");
         }
+        return sb.toString();
     }
 
 
-    public void viterbi(Integer[] observeSequence) {
+    public String viterbi(Integer[] observeSequence) {
         observationNum = observeSequence.length;
         Integer[][] path = new Integer[observationNum][stateNum];
         Double[][] deltas = new Double[observationNum][stateNum];
@@ -148,18 +170,25 @@ public class ViterbiHmm {
         }
 
         //找最优路径，注意最后一个字不是所有状态的最大值，而是E(1)和S(3)的最大值
-        Integer[] mostLikelyStateSequence = new Integer[observationNum];
-        mostLikelyStateSequence[observationNum - 1] = deltas[observationNum - 1][1] >= deltas[observationNum - 1][3] ? 1 : 3;
+        Integer[] bestStateSequence = new Integer[observationNum];
+        bestStateSequence[observationNum - 1] = deltas[observationNum - 1][1] >= deltas[observationNum - 1][3] ? 1 : 3;
 
-        for (int i = mostLikelyStateSequence.length - 2; i >= 0; i--) {
-            mostLikelyStateSequence[i] = path[i + 1][mostLikelyStateSequence[i + 1]];
+        for (int i = bestStateSequence.length - 2; i >= 0; i--) {
+            bestStateSequence[i] = path[i + 1][bestStateSequence[i + 1]];
         }
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < observationNum; i++) {
-            System.out.print(wordId.inverse().get(observeSequence[i]));
-            if (mostLikelyStateSequence[i] == 1 || mostLikelyStateSequence[i] == 3) {
-                System.out.print(" ");
+            //妈的，这一段希望没人看到，不然就搞笑了
+            if (observeSequence[i] == 9999) {
+                sb.append("/");
+            } else {
+                sb.append(wordId.inverse().get(observeSequence[i]));
+            }
+            if (bestStateSequence[i] == 1 || bestStateSequence[i] == 3) {
+                sb.append("\t");
             }
         }
+        return sb.toString();
 
     }
 
@@ -167,7 +196,7 @@ public class ViterbiHmm {
         char[] chars = s.toCharArray();
         Integer[] res = new Integer[chars.length];
         for (int i = 0; i < chars.length; i++) {
-            res[i] = wordId.getOrDefault(String.valueOf(chars[i]), 1);
+            res[i] = wordId.getOrDefault(String.valueOf(chars[i]), 9999);
         }
         return res;
     }
@@ -240,6 +269,6 @@ public class ViterbiHmm {
     @Test
     public void segmentTest() {
         initLambda();
-        viterbi("今天的天气很好，出来散心挺不错，武汉大学特别好，提高人民的生活水平");
+        System.out.println(viterbi("今天的天气很好，出来散心挺不错，武汉大学特别好，提高人民的生活水平"));
     }
 }
