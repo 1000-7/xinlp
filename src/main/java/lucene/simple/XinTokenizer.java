@@ -32,7 +32,6 @@ public class XinTokenizer extends Tokenizer {
         Atom atom;
         atom = segment.next();
 
-
         if (atom != null) {
             //每一个词都是1个，因为不支持智能分词（今天天气==>今天，天气，天天）
             positionAttr.setPositionIncrement(1);
