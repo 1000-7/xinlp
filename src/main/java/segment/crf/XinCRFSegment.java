@@ -42,15 +42,15 @@ public class XinCRFSegment implements Segment {
 //        XinCRFConfig.print(matrix);
     }
 
-    public void viterbi(String sentence) {
+    public String viterbi(String sentence) {
         XinTable table = sentence2XinTable(sentence);
-        viterbi(table);
+        return viterbi(table);
     }
 
-    private void viterbi(XinTable table) {
+    private String viterbi(XinTable table) {
         int observationNum = table.size();
         if (observationNum == 0) {
-            return;
+            return "";
         }
         int stateNum = xinCRFModel.getId2tag().length;
 
@@ -75,7 +75,7 @@ public class XinCRFSegment implements Segment {
                 }
             }
             table.setLast(0, id2tag[bestTag]);
-            return;
+            return "";
         }
         Integer[][] path = new Integer[observationNum][stateNum];
         Double[][] deltas = new Double[observationNum][stateNum];
@@ -113,7 +113,15 @@ public class XinCRFSegment implements Segment {
             table.v[i][1] = id2tag[path[i + 1][tag2id.get(table.v[i + 1][1])]];
 //            table.setLast(i, id2tag[path[i + 1][tag2id.get(table.get(i + 1, 1))]]);
         }
-        System.out.println(table);
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < table.v.length; i++) {
+            sb.append(table.v[i][0]);
+            if ("S".equals(table.v[i][1]) || "E".equals(table.v[i][1])) {
+                sb.append("\t");
+            }
+        }
+        System.out.println(sb.toString());
+        return sb.toString();
     }
 
     //计算所有模版在某个隐藏状态值的得分
@@ -175,6 +183,7 @@ public class XinCRFSegment implements Segment {
 
     @Override
     public List<Atom> seg(String text) {
-        return null;
+        String[] strings = viterbi(text).trim().split("[\t\n]");
+        return strings2AtomList(strings);
     }
 }
