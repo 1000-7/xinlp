@@ -9,11 +9,15 @@ import lombok.extern.slf4j.Slf4j;
 import lucene.simple.Atom;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Test;
+import segment.Segment;
 
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 
 /**
  * viterbi算法
@@ -62,7 +66,7 @@ import java.util.*;
  */
 @Data
 @Slf4j
-public class XinHmmSegment {
+public class XinHmmSegment implements Segment {
 
     private static char[] state = new char[]{'B', 'E', 'M', 'S'};
     /**
@@ -113,21 +117,11 @@ public class XinHmmSegment {
         initB();
     }
 
+    @Override
     public List<Atom> seg(String text) {
         String segResult = viterbi(text);
-        List<Atom> atoms = new ArrayList<>();
         String[] strings = segResult.split("[\t\n]");
-        int d = 0;
-        for (String s : strings) {
-            Atom atom = new Atom();
-            atom.setContent(s);
-            atom.setOffe(d);
-            atom.setLen(s.length());
-            atom.setChars(s.toCharArray());
-            d += s.length();
-            atoms.add(atom);
-        }
-        return atoms;
+        return strings2AtomList(strings);
     }
 
     /**

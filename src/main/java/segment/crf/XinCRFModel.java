@@ -176,7 +176,7 @@ public class XinCRFModel implements Serializable {
             xinCRFModel = (XinCRFModel) oos.readObject();
 
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+            log.info("没找到转化过的model，读取原始txt文件");
         }
         if (xinCRFModel != null) {
             log.info("读取CRFModel完毕，共耗费时间" + (System.currentTimeMillis() - start) + "ms");

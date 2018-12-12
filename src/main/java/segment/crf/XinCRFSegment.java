@@ -2,6 +2,8 @@ package segment.crf;
 
 import lombok.Data;
 import lombok.extern.java.Log;
+import lucene.simple.Atom;
+import segment.Segment;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -13,7 +15,7 @@ import java.util.Map;
  */
 @Log
 @Data
-public class XinCRFSegment {
+public class XinCRFSegment implements Segment {
     private static XinCRFModel xinCRFModel;
     private static DoubleArrayTrie<FeatureFunction> featureFunctionTrie;
     private static List<FeatureTemplate> featureTemplateList;
@@ -101,14 +103,14 @@ public class XinCRFSegment {
 
 
         if (deltas[observationNum - 1][1] > deltas[observationNum - 1][3]) {
-            table.v[observationNum-1][1]=id2tag[1];
+            table.v[observationNum - 1][1] = id2tag[1];
         } else {
-            table.v[observationNum-1][1]=id2tag[3];
+            table.v[observationNum - 1][1] = id2tag[3];
         }
 
         //找最优路径，注意最后一个字不是所有状态的最大值，而是E(1)和S(3)的最大值
         for (int i = observationNum - 2; i >= 0; i--) {
-            table.v[i][1]=id2tag[path[i+1][tag2id.get(table.v[i+1][1])]];
+            table.v[i][1] = id2tag[path[i + 1][tag2id.get(table.v[i + 1][1])]];
 //            table.setLast(i, id2tag[path[i + 1][tag2id.get(table.get(i + 1, 1))]]);
         }
         System.out.println(table);
@@ -169,5 +171,10 @@ public class XinCRFSegment {
         xinCRFSegment.viterbi("我是中国人");
         xinCRFSegment.viterbi("迈向充满希望的新司机");
         xinCRFSegment.viterbi("香港特别行政区");
+    }
+
+    @Override
+    public List<Atom> seg(String text) {
+        return null;
     }
 }
