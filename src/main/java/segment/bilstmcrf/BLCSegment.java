@@ -27,7 +27,9 @@ import java.util.List;
  */
 @Slf4j
 public class BLCSegment implements Segment {
+    //根据 /Users/unclewang/Idea_Projects/xinlp/python/bilstmcrf/modelserver.py 这个文件配置决定
     public static final String IP = "192.168.1.104";
+    public static final Integer PORT = 9006;
 
     @Override
     public List<Atom> seg(String text) {
@@ -47,7 +49,7 @@ public class BLCSegment implements Segment {
         } catch (URISyntaxException | IOException e) {
             e.printStackTrace();
         }
-        log.error("BiLSTM+CRF分词出问题了，赶快过来看看");
+        log.error("BiLSTM+CRF分词出问题，赶快过来看看");
         return null;
     }
 
@@ -71,7 +73,7 @@ public class BLCSegment implements Segment {
         URI uri = new URIBuilder()
                 .setScheme("http")
                 .setHost(IP)
-                .setPort(9006)
+                .setPort(PORT)
                 .setPath("/predict")
                 .setParameter("sent", sent)
                 .build();
