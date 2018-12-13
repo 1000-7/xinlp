@@ -2,7 +2,7 @@ package segment.crf;
 
 import lombok.Data;
 import lombok.extern.java.Log;
-import lucene.simple.Atom;
+import lucene.Atom;
 import segment.Segment;
 
 import java.util.LinkedList;

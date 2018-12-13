@@ -6,7 +6,7 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import lucene.simple.Atom;
+import lucene.Atom;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Test;
 import segment.Segment;

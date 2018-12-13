@@ -1,11 +1,10 @@
-package lucene.simple;
+package lucene;
 
 import lombok.extern.java.Log;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.Tokenizer;
 import segment.Segment;
 import segment.bilstmcrf.BLCSegment;
-import segment.crf.XinCRFSegment;
 import segment.crf.tcp.XinCRFSegmentClient;
 import segment.hmm.XinHmmSegment;
 

@@ -1,4 +1,4 @@
-package lucene.simple;
+package lucene;
 
 import lombok.Data;
 

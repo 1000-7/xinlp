@@ -1,4 +1,4 @@
-package lucene.simple;
+package lucene;
 
 import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
@@ -6,7 +6,6 @@ import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
 import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute;
 import org.apache.lucene.analysis.tokenattributes.TypeAttribute;
 import segment.Segment;
-import segment.hmm.XinHmmSegment;
 
 import java.io.BufferedReader;
 import java.io.IOException;

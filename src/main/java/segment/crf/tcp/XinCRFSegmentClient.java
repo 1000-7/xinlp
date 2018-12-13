@@ -1,7 +1,7 @@
 package segment.crf.tcp;
 
 import com.alibaba.fastjson.JSONObject;
-import lucene.simple.Atom;
+import lucene.Atom;
 import org.junit.jupiter.api.Test;
 import segment.Segment;
 

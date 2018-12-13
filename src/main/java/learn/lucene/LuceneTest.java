@@ -2,7 +2,7 @@ package learn.lucene;
 
 import com.hankcs.lucene.HanLPAnalyzer;
 import learn.lucene.rewriteTokenize.IKAnalyzer4Lucene7;
-import lucene.simple.XinAnalyzer;
+import lucene.XinAnalyzer;
 import org.ansj.lucene7.AnsjAnalyzer;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.CharArraySet;

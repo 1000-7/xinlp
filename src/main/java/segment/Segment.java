@@ -1,6 +1,6 @@
 package segment;
 
-import lucene.simple.Atom;
+import lucene.Atom;
 
 import java.util.ArrayList;
 import java.util.List;
