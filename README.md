@@ -37,7 +37,7 @@ https://www.unclewang.info/learn/machine-learning/756/
 
 ## 自己实现一个支持lucene的分词器——XinAnalyzer
 用lucene的时候，看见了一个叫SmartChineseAnalyzer的支持中文分词，效果不咋的，发现竟然用的HMM分词，当时一句"我的天"，于是就想自己也写一个。。。 \
-2018.12.11  自己的HMM分词器已经支持了
+2018.12.11  自己的HMM分词器已经支持了 \
 2018.12.13  支持CRF分词（tcp通信），支持BiLSTM+CRF分词（http通信）
 ### 相关博客
 https://www.unclewang.info/learn/java/760/
