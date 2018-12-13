@@ -6,3 +6,9 @@ src/main/python/bilstmcrf/output/
 src/test/
 target/
 venv/
+python/bilstmcrf/__pycache__/
+python/bilstmcrf/data/
+python/bilstmcrf/output/
+python/bilstmcrf/output20181209/
+src/main/resources/mining/
+src/main/resources/segment/crf/
