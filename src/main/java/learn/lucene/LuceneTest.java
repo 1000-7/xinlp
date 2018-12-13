@@ -32,7 +32,7 @@ import java.util.Iterator;
 public class LuceneTest {
 
     public static void main(String[] a) throws IOException, ParseException {
-        Analyzer analyzer = new XinAnalyzer();
+        Analyzer analyzer = new XinAnalyzer(XinAnalyzer.TYPE.HMM_XIN);
         analyzer.setVersion(Version.LUCENE_7_4_0);
 
         IndexWriterConfig config = new IndexWriterConfig(analyzer);
@@ -127,7 +127,7 @@ public class LuceneTest {
 
     @Test
     public void testXinAnalyzer() throws Exception {
-        Analyzer xanalyxer = new XinAnalyzer();
+        Analyzer xanalyxer = new XinAnalyzer(XinAnalyzer.TYPE.BILSTMCRF_XIN);
         print(xanalyxer);
     }
 

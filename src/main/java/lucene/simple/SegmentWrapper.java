@@ -1,7 +1,7 @@
 package lucene.simple;
 
 import lombok.Data;
-import segment.hmm.XinHmmSegment;
+import segment.Segment;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -17,7 +17,7 @@ public class SegmentWrapper {
     /**
      * 分词器
      */
-    private XinHmmSegment segment;
+    private Segment segment;
     /**
      * 分词结果
      */
@@ -39,7 +39,7 @@ public class SegmentWrapper {
      */
     private int remainSize = 0;
 
-    public SegmentWrapper(Reader reader, XinHmmSegment segment) {
+    public SegmentWrapper(Reader reader, Segment segment) {
         this.input = reader;
         this.segment = segment;
     }

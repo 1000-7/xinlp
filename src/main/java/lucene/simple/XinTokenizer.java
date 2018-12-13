@@ -5,6 +5,7 @@ import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
 import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute;
 import org.apache.lucene.analysis.tokenattributes.TypeAttribute;
+import segment.Segment;
 import segment.hmm.XinHmmSegment;
 
 import java.io.BufferedReader;
@@ -22,7 +23,7 @@ public class XinTokenizer extends Tokenizer {
     private SegmentWrapper segment;
     private int totalOffset = 0;
 
-    public XinTokenizer(XinHmmSegment segment) {
+    public XinTokenizer(Segment segment) {
         this.segment = new SegmentWrapper(input, segment);
     }
 
