@@ -198,7 +198,7 @@ public class XinHmmSegment implements Segment {
 
     private void initB() {
         try {
-            String list = FileUtils.readFileToString(new File(System.getProperty("user.dir") + "/src/main/resources/B.json"), "UTF8");
+            String list = FileUtils.readFileToString(new File(System.getProperty("user.dir") + "/src/main/resources/segment/hmm/B.json"), "UTF8");
             JSONObject jsonObject = JSON.parseObject(list);
             Map<String, Double> bMap = toDouble(JSON.parseObject(jsonObject.get("B").toString()).getInnerMap());
             Map<String, Double> eMap = toDouble(JSON.parseObject(jsonObject.get("E").toString()).getInnerMap());
