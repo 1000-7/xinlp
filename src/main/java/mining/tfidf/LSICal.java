@@ -23,8 +23,8 @@ public class LSICal {
             e.printStackTrace();
         }
         BiMap<Integer, Integer> vocabularyIdTermId = termIdVocabularyId.inverse();
-        log.info("正在生成" + idTfIDf.size() + "*" + termIdVocabularyId.size() + "的矩阵");
-        float[][] docTermMatrix = new float[idTfIDf.size()][termIdVocabularyId.size()];
+        log.info("正在生成" + docNum + "*" + termIdVocabularyId.size() + "的矩阵");
+        float[][] docTermMatrix = new float[docNum][termIdVocabularyId.size()];
         for (Map.Entry<Integer, HashMap<Integer, Double>> entry : idTfIDf.entrySet()) {
             int docId = entry.getKey();
             if (docId >= docNum) {
