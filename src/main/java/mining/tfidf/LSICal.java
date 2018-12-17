@@ -12,6 +12,8 @@ import java.util.Map;
 @Slf4j
 public class LSICal {
     private BiMap<Integer, Integer> termIdVocabularyId;
+    //18288数量太大，电脑吃不消
+    private int docNum = 2000;
 
     public float[][] transformMatrix(HashMap<Integer, HashMap<Integer, Double>> idTfIDf) {
         BiMap<Integer, Integer> termIdVocabularyId = null;
@@ -25,12 +27,16 @@ public class LSICal {
         float[][] docTermMatrix = new float[idTfIDf.size()][termIdVocabularyId.size()];
         for (Map.Entry<Integer, HashMap<Integer, Double>> entry : idTfIDf.entrySet()) {
             int docId = entry.getKey();
+            if (docId >= docNum) {
+                break;
+            }
             for (Map.Entry<Integer, Double> termEntry : entry.getValue().entrySet()) {
                 int vocaId = termEntry.getKey();
                 double value = termEntry.getValue();
                 int termId = vocabularyIdTermId.get(vocaId);
                 docTermMatrix[docId][termId] = (float) value;
             }
+
         }
         return docTermMatrix;
     }
