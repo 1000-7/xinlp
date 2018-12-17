@@ -133,7 +133,7 @@ public class AllDocTfIdf {
      */
     private void setNoFeatureWordId() {
         int maxDF = 100;
-        int minDF = 3;
+        int minDF = 5;
 
         double minIdf = FastMath.log(((idFiles.size() + 1) * 1.0) / (maxDF + 1)) + 1;
         double maxIdf = FastMath.log(((idFiles.size() + 1) * 1.0) / (minDF + 1)) + 1;
