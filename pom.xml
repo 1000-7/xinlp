@@ -131,24 +131,32 @@
             <artifactId>fastjson</artifactId>
             <version>1.2.53</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.spark/spark-mllib -->
+        <!--<dependency>-->
+        <!--<groupId>org.apache.spark</groupId>-->
+        <!--<artifactId>spark-mllib_2.12</artifactId>-->
+        <!--<version>2.4.0</version>-->
+        <!--<scope>runtime</scope>-->
+        <!--</dependency>-->
+
 
         <!-- https://mvnrepository.com/artifact/org.deeplearning4j/deeplearning4j-core -->
-        <!--<dependency>-->
-        <!--<groupId>org.deeplearning4j</groupId>-->
-        <!--<artifactId>deeplearning4j-core</artifactId>-->
-        <!--<version>1.0.0-beta3</version>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>org.nd4j</groupId>-->
-        <!--<artifactId>nd4j-native-platform</artifactId>-->
-        <!--<version>1.0.0-beta3</version>-->
-        <!--</dependency>-->
-        <!--&lt;!&ndash; https://mvnrepository.com/artifact/org.deeplearning4j/deeplearning4j-datasets &ndash;&gt;-->
-        <!--<dependency>-->
-        <!--<groupId>org.deeplearning4j</groupId>-->
-        <!--<artifactId>deeplearning4j-datasets</artifactId>-->
-        <!--<version>1.0.0-beta3</version>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>org.deeplearning4j</groupId>
+            <artifactId>deeplearning4j-core</artifactId>
+            <version>1.0.0-beta3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.nd4j</groupId>
+            <artifactId>nd4j-native-platform</artifactId>
+            <version>1.0.0-beta3</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.deeplearning4j/deeplearning4j-datasets -->
+        <dependency>
+            <groupId>org.deeplearning4j</groupId>
+            <artifactId>deeplearning4j-datasets</artifactId>
+            <version>1.0.0-beta3</version>
+        </dependency>
 
         <dependency>
             <groupId>gov.nist.math</groupId>
