@@ -12,6 +12,7 @@ import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.random.MersenneTwister;
 import org.apache.commons.math3.random.RandomGenerator;
 import org.apache.commons.math3.util.FastMath;
+import tools.PathUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -309,7 +310,7 @@ public class EmHmm {
     private void randomInitB() {
         try {
             log.info("正在初始化参数B");
-            String list = FileUtils.readFileToString(new File(System.getProperty("user.dir") + "/src/main/resources/segment/hmm/B.json"), "UTF8");
+            String list = FileUtils.readFileToString(new File(PathUtils.getDataPath() + "/segment/hmm/B.json"), "UTF8");
             JSONObject jsonObject = JSON.parseObject(list);
             Map<String, Double> bMap = toDouble(JSON.parseObject(jsonObject.get("B").toString()).getInnerMap());
             Map<String, Double> eMap = toDouble(JSON.parseObject(jsonObject.get("E").toString()).getInnerMap());
@@ -485,7 +486,7 @@ public class EmHmm {
     public static void main(String[] args) throws IOException {
         List<String> fileLines = null;
         try {
-            fileLines = FileUtils.readLines(new File(System.getProperty("user.dir") + "/src/main/resources/segment/data/pku_training.splitBy2space.utf8"), "UTF-8");
+            fileLines = FileUtils.readLines(new File(PathUtils.getDataPath() + "/segment/data/pku_training.splitBy2space.utf8"), "UTF-8");
         } catch (IOException e) {
             e.printStackTrace();
         }

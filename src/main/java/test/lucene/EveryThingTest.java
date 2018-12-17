@@ -1,9 +1,11 @@
 package test.lucene;
 
+import lombok.Data;
 import org.ansj.domain.Term;
 import org.ansj.splitWord.analysis.NlpAnalysis;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -24,4 +26,16 @@ public class EveryThingTest {
             //}
         }
     }
+
+    @Test
+    public void testHashMap() {
+        HashMap<String, String> stringStringHashMap = new HashMap<>();
+        stringStringHashMap.put("1", "sadas");
+        stringStringHashMap.put("1", "sas");
+        System.out.println(stringStringHashMap.get("1"));
+        stringStringHashMap.remove("1");
+        System.out.println(stringStringHashMap.get("1"));
+        System.out.println(stringStringHashMap.containsKey("1"));
+    }
 }
+
