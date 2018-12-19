@@ -1,5 +1,5 @@
 import os
-import sys
+
 import time
 
 import tensorflow as tf
@@ -144,7 +144,7 @@ class BiLSTM_CRF:
         start_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
         batches = batch_yield(train, self.batch_size)
         for step, (seqs, labels) in enumerate(batches):
-            sys.stdout.write(' processing: {} batch / {} batches.'.format(step + 1, num_batches) + '\r')
+            self.logger.write(' processing: {} batch / {} batches.'.format(step + 1, num_batches) + '\r')
             step_num = epoch * num_batches + step + 1
             feed_dict, _ = self.get_feed_dict(seqs, labels)
             _, loss_train, summary, step_num_ = sess.run([self.train_op, self.loss, self.merged, self.global_step],

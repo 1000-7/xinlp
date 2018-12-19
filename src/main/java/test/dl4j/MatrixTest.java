@@ -42,6 +42,25 @@ public class MatrixTest {
     }
 
     @Test
+    public void testmm() {
+        double[][] vals = {{1, 1, 1, 0, 0}, {2, 2, 2, 0, 0}, {1, 1, 1, 0, 0}, {5, 5, 5, 0, 0}, {0, 0, 0, 2, 2}, {0, 0, 0, 3, 3}, {0, 0, 0, 1, 1}};
+        INDArray A = Nd4j.create(vals);
+        long m = A.rows();
+        long n = A.columns();
+        INDArray mean = A.mean(0);
+        A.subiRowVector(mean);
+        System.out.println(A);
+        // The prepare SVD results, we'll decomp A to UxSxV'
+        INDArray s = Nd4j.create(m < n ? m : n);
+        INDArray VT = Nd4j.create(n, n, 'f');
+
+        // Note - we don't care about U
+        Nd4j.getBlasWrapper().lapack().gesvd(A, s, null, VT);
+        System.out.println("\n S:" + s);
+        System.out.println("\n V:" + VT);
+    }
+
+    @Test
     public void test() {
         System.out.println(System.getProperty("java.io.tmpdir"));
     }
