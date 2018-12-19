@@ -9,6 +9,6 @@ public class ClusterApp {
         AllDocTfIdf allDocTfIdf = new AllDocTfIdf();
         HashMap<Integer, HashMap<Integer, Double>> idTfIDf = allDocTfIdf.loadAllDocTfIdf();
         KmeansCluster kmeansCluster = new KmeansCluster();
-        System.out.println(kmeansCluster.cluster(idTfIDf, 20));
+        System.out.println(kmeansCluster.cluster(idTfIDf, 10));
     }
 }

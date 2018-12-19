@@ -87,8 +87,6 @@ class IndexHandler(RequestHandler):
     def get(self):
         # 获取get方式传递的参数
         sent = self.get_query_argument("sent")
-        print(sent)
-        print(predict(sent))
         self.write(predict(str(sent)))
 
     def post(self):

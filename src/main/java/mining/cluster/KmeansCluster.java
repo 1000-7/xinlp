@@ -13,9 +13,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class KmeansCluster {
     public Map<Integer, Integer> cluster(HashMap<Integer, HashMap<Integer, Double>> idTfidfs, int k) {
         int fileLen = idTfidfs.size();
-        Integer[] ids = new Integer[fileLen];
 
-        idTfidfs.keySet().toArray(ids);
         HashMap<Integer, HashMap<Integer, Double>> meansMap = getInitPoint(idTfidfs, k);
         System.out.println(meansMap);
         //distance[i][j]记录点i到聚类中心j的距离
