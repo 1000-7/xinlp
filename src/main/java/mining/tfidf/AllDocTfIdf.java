@@ -31,6 +31,10 @@ public class AllDocTfIdf {
     private static BiMap<Integer, Integer> termIdVocabularyId = HashBiMap.create();
 
 
+    public static BiMap<Integer, String> getIdFiles() {
+        return idFiles;
+    }
+
     private void generateAllTfDf() {
         log.info("正在计算文档频率");
         for (int i = 0; i < idFiles.size(); i++) {

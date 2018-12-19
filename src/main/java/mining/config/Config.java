@@ -68,6 +68,9 @@ public class Config {
         getIdPostFiles(postPath);
 
         System.out.println(idPostFiles.size());
-        System.out.println(idPostFiles.get(0));
+        for (int i = 0; i < 10; i++) {
+            System.out.println(idPostFiles.get(i));
+        }
+
     }
 }
