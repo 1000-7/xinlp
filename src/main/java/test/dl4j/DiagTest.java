@@ -37,4 +37,8 @@ public class DiagTest {
         System.out.println(S1);
     }
 
+    @Test
+    public void test111() {
+        System.out.println(Math.pow(3, 2));
+    }
 }

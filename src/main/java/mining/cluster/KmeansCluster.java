@@ -4,10 +4,7 @@ import com.google.common.collect.HashMultimap;
 import mining.tfidf.AllDocTfIdf;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class KmeansCluster {
@@ -102,7 +99,19 @@ public class KmeansCluster {
     }
 
     private double getDistance(HashMap<Integer, Double> map1, HashMap<Integer, Double> map2) {
-        return computeCos(map1, map2);
+        return computeEuclidean(map1, map2);
+//        return computeCos(map1, map2);
+    }
+
+    private double computeEuclidean(HashMap<Integer, Double> map1, HashMap<Integer, Double> map2) {
+        Set<Integer> keys = new HashSet<>();
+        keys.addAll(map1.keySet());
+        keys.addAll(map2.keySet());
+        double sum = 0;
+        for (Integer i : keys) {
+            sum += Math.pow(map1.getOrDefault(i, 0.0) - map2.getOrDefault(i, 0.0), 2);
+        }
+        return Math.sqrt(sum);
     }
 
     private double computeCos(HashMap<Integer, Double> map1, HashMap<Integer, Double> map2) {

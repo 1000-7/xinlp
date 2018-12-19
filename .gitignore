@@ -12,3 +12,4 @@ python/bilstmcrf/output/
 python/bilstmcrf/output20181209/
 src/main/resources/mining/
 src/main/resources/segment/crf/
+/.idea/misc.xml
