@@ -11,8 +11,11 @@ import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class KmeansCluster {
+    private HashMultimap<Integer, Integer> clusterMember = HashMultimap.create();
+
     public Map<Integer, Integer> cluster(HashMap<Integer, HashMap<Integer, Double>> idTfidfs, int k) {
         int fileLen = idTfidfs.size();
+        //记录每个聚类的成员点序号
 
         HashMap<Integer, HashMap<Integer, Double>> meansMap = getInitPoint(idTfidfs, k);
         System.out.println(meansMap);
@@ -20,8 +23,8 @@ public class KmeansCluster {
         double[][] distance = new double[fileLen][k];
         //记录所有点属于的聚类序号，初始化全部为0
         int[] assignMeans = new int[fileLen];
-        //记录每个聚类的成员点序号
-        HashMultimap<Integer, Integer> clusterMember = HashMultimap.create();
+
+
         int iterNum = 0;
         while (true) {
             System.out.println("Iteration No." + (iterNum++) + "----------------------");
@@ -55,7 +58,7 @@ public class KmeansCluster {
             }
             for (int i = 0; i < k; i++) {
                 if (!clusterMember.containsKey(i)) {
-                    clusterMember.put(i, 0);
+                    continue;
                 }
                 HashMap<Integer, Double> newMean = computeNewMean(clusterMember.get(i), idTfidfs);
                 meansMap.put(i, newMean);
@@ -127,6 +130,7 @@ public class KmeansCluster {
         for (Map.Entry<Integer, HashMap<Integer, Double>> entry : idTfidfs.entrySet()) {
             if (count == i * idTfidfs.size() / k) {
                 meansMap.put(i, entry.getValue());
+                clusterMember.put(count, i);
                 i++;
             }
             count++;
