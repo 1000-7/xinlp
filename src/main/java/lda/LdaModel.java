@@ -136,7 +136,7 @@ public class LdaModel {
     }
     
     public void saveIteratedModel(int i) {
-        String resPath = LDAConfig.getRESPATH();
+        String resPath = LDAConfig.RESPATH;
         String modelPath = resPath + "lda_" + i;
         ArrayList<String> lines = new ArrayList<String>();
         lines.add("alpha = " + alpha);
