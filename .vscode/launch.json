@@ -1,0 +1,126 @@
+{
+    // 使用 IntelliSense 了解相关属性。 
+    // 悬停以查看现有属性的描述。
+    // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - LDAConfig",
+            "request": "launch",
+            "mainClass": "lda.LDAConfig",
+            "projectName": "xinlp"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch) - Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-LdaGibbsSampling<xinlp>",
+            "request": "launch",
+            "mainClass": "lda.LdaGibbsSampling",
+            "projectName": "xinlp"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-ClusterApp<xinlp>",
+            "request": "launch",
+            "mainClass": "mining.cluster.ClusterApp",
+            "projectName": "xinlp"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-AllDocTfIdf<xinlp>",
+            "request": "launch",
+            "mainClass": "mining.tfidf.AllDocTfIdf",
+            "projectName": "xinlp"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-LSICal<xinlp>",
+            "request": "launch",
+            "mainClass": "mining.tfidf.LSICal",
+            "projectName": "xinlp"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-XinCRFModel<xinlp>",
+            "request": "launch",
+            "mainClass": "segment.crf.XinCRFModel",
+            "projectName": "xinlp"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-XinCRFSegment<xinlp>",
+            "request": "launch",
+            "mainClass": "segment.crf.XinCRFSegment",
+            "projectName": "xinlp"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-XinCRFApp<xinlp>",
+            "request": "launch",
+            "mainClass": "segment.crf.app.XinCRFApp",
+            "projectName": "xinlp"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-XinCRFSegmentServer<xinlp>",
+            "request": "launch",
+            "mainClass": "segment.crf.tcp.XinCRFSegmentServer",
+            "projectName": "xinlp"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-EmHmm<xinlp>",
+            "request": "launch",
+            "mainClass": "segment.hmm.EmHmm",
+            "projectName": "xinlp"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-BaumWelchHmm<xinlp>",
+            "request": "launch",
+            "mainClass": "test.hmm.BaumWelchHmm",
+            "projectName": "xinlp"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-UnsupervisedFirstOrderGeneralHmm<xinlp>",
+            "request": "launch",
+            "mainClass": "test.hmm.baumwelch.UnsupervisedFirstOrderGeneralHmm",
+            "projectName": "xinlp"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-LuceneTest<xinlp>",
+            "request": "launch",
+            "mainClass": "test.lucene.LuceneTest",
+            "projectName": "xinlp"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-IKAnalyzerTest<xinlp>",
+            "request": "launch",
+            "mainClass": "test.lucene.rewriteTokenize.IKAnalyzerTest",
+            "projectName": "xinlp"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-TestNewton<xinlp>",
+            "request": "launch",
+            "mainClass": "test.newton.TestNewton",
+            "projectName": "xinlp"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-Stemmer<xinlp>",
+            "request": "launch",
+            "mainClass": "tools.Stemmer",
+            "projectName": "xinlp"
+        }
+    ]
+}
